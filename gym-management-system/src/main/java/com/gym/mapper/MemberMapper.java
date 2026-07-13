@@ -29,4 +29,6 @@ public interface MemberMapper {
     //根据会员账号查询会员
     List<Member> selectByMemberAccount(Integer memberAccount);
 
+    Member selectByAccount(Integer memberAccount);
+
 }

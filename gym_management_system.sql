@@ -14,9 +14,9 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1001, '123456');
-INSERT INTO `admin` VALUES (1002, '123456');
-INSERT INTO `admin` VALUES (1003, '123456');
+INSERT INTO `admin` VALUES (1001, '$2a$10$AE5I/5TALgoFwpiZF6ONI.pF1z6N0BwPxKSqYb2cmgAAPopDzCSGe');
+INSERT INTO `admin` VALUES (1002, '$2a$10$AE5I/5TALgoFwpiZF6ONI.pF1z6N0BwPxKSqYb2cmgAAPopDzCSGe');
+INSERT INTO `admin` VALUES (1003, '$2a$10$AE5I/5TALgoFwpiZF6ONI.pF1z6N0BwPxKSqYb2cmgAAPopDzCSGe');
 
 -- ----------------------------
 -- Table structure for classtable
@@ -85,7 +85,7 @@ INSERT INTO `class_order` VALUES (11, 0003, '减脂', '减脂教练', 'Emma', 20
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `member_account` int NOT NULL COMMENT '会员账号',
-  `member_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '123456' COMMENT '会员密码',
+  `member_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa' COMMENT '会员密码',
   `member_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会员姓名',
   `member_gender` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '会员性别',
   `member_age` int NULL DEFAULT NULL COMMENT '会员年龄',
@@ -101,18 +101,18 @@ CREATE TABLE `member`  (
 -- ----------------------------
 -- Records of member
 -- ----------------------------
-INSERT INTO `member` VALUES (202009867, '123456', '张三', '女', 24, 182, 60, 13515548482, '2025-06-05', 40, 40);
-INSERT INTO `member` VALUES (202100788, '123456', '李四', '男', 31, 178, 60, 13131554873, '2026-01-01', 50, 50);
-INSERT INTO `member` VALUES (202132539, '123456', '王五', '男', 31, 178, 60, 13154875489, '2026-01-01', 40, 40);
-INSERT INTO `member` VALUES (202186416, '123456', '马六', '女', 23, 160, 45, 13124576857, '2026-01-16', 30, 30);
-INSERT INTO `member` VALUES (202106725, '123456', 'Tom', '男', 24, 178, 88, 13758784959, '2026-02-26', 30, 30);
-INSERT INTO `member` VALUES (202183406, '123456', 'Tylor', '女', 19, 170, 60, 13786457488,'2026-02-27', 30, 30);
-INSERT INTO `member` VALUES (202176587, '123456', 'Jack', '男', 33, 177, 90, 13767546666, '2026-02-27', 30, 30);
-INSERT INTO `member` VALUES (202156754, '123456', 'Mike', '男', 36, 166, 67, 13786532448, '2026-02-28', 30, 30);
-INSERT INTO `member` VALUES (202153468, '123456', 'Emma', '女', 25, 173, 44, 13786457124,  '2026-03-01', 50, 50);
-INSERT INTO `member` VALUES (202121345, '123456', 'Ava', '女', 28, 160, 40, 13754457488, '2026-03-02', 30, 30);
-INSERT INTO `member` VALUES (202189776, '123456', 'Chloe', '女', 27, 170, 50, 13986337489,  '2026-03-23', 30, 30);
-INSERT INTO `member` VALUES (202123664, '123456', 'Lily', '女', 25, 165, 51, 15986457423,  '2026-03-27', 30, 30);
+INSERT INTO `member` VALUES (202009867, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '张三', '女', 24, 182, 60, 13515548482, '2025-06-05', 40, 40);
+INSERT INTO `member` VALUES (202100788, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '李四', '男', 31, 178, 60, 13131554873, '2026-01-01', 50, 50);
+INSERT INTO `member` VALUES (202132539, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '王五', '男', 31, 178, 60, 13154875489, '2026-01-01', 40, 40);
+INSERT INTO `member` VALUES (202186416, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '马六', '女', 23, 160, 45, 13124576857, '2026-01-16', 30, 30);
+INSERT INTO `member` VALUES (202106725, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tom', '男', 24, 178, 88, 13758784959, '2026-02-26', 30, 30);
+INSERT INTO `member` VALUES (202183406, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tylor', '女', 19, 170, 60, 13786457488,'2026-02-27', 30, 30);
+INSERT INTO `member` VALUES (202176587, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Jack', '男', 33, 177, 90, 13767546666, '2026-02-27', 30, 30);
+INSERT INTO `member` VALUES (202156754, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Mike', '男', 36, 166, 67, 13786532448, '2026-02-28', 30, 30);
+INSERT INTO `member` VALUES (202153468, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Emma', '女', 25, 173, 44, 13786457124,  '2026-03-01', 50, 50);
+INSERT INTO `member` VALUES (202121345, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Ava', '女', 28, 160, 40, 13754457488, '2026-03-02', 30, 30);
+INSERT INTO `member` VALUES (202189776, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Chloe', '女', 27, 170, 50, 13986337489,  '2026-03-23', 30, 30);
+INSERT INTO `member` VALUES (202123664, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Lily', '女', 25, 165, 51, 15986457423,  '2026-03-27', 30, 30);
 
 -- ----------------------------
 -- Table structure for employee

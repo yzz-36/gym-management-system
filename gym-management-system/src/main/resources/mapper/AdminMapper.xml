@@ -11,4 +11,10 @@
           AND admin_password = #{adminPassword}
     </select>
 
+    <select id="selectByAccount" parameterType="java.lang.Integer" resultType="admin">
+        SELECT *
+        FROM admin
+        WHERE admin_account = #{adminAccount}
+    </select>
+
 </mapper>
