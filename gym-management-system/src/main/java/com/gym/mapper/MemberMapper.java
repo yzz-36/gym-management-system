@@ -31,4 +31,8 @@ public interface MemberMapper {
 
     Member selectByAccount(Integer memberAccount);
 
+    Boolean deductMemberClass(Integer memberAccount);
+
+    Boolean refundMemberClass(Integer memberAccount);
+
 }

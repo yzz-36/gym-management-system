@@ -28,4 +28,10 @@ public interface MemberService {
     //根据会员账号查询会员
     List<Member> selectByMemberAccount(Integer memberAccount);
 
+    //扣减会员剩余课时
+    Boolean deductMemberClass(Integer memberAccount);
+
+    //返还会员剩余课时
+    Boolean refundMemberClass(Integer memberAccount);
+
 }

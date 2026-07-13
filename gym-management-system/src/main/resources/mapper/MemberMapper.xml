@@ -62,4 +62,17 @@
         WHERE member_account = #{memberAccount}
     </select>
 
+    <update id="deductMemberClass" parameterType="java.lang.Integer">
+        UPDATE member
+        SET card_next_class = card_next_class - 1
+        WHERE member_account = #{memberAccount}
+          AND card_next_class &gt; 0
+    </update>
+
+    <update id="refundMemberClass" parameterType="java.lang.Integer">
+        UPDATE member
+        SET card_next_class = card_next_class + 1
+        WHERE member_account = #{memberAccount}
+    </update>
+
 </mapper>

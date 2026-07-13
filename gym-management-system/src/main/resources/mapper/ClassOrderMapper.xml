@@ -39,5 +39,10 @@
         WHERE class_id = #{classId}
     </select>
 
+    <select id="selectByClassOrderId" parameterType="java.lang.Integer" resultType="classOrder">
+        SELECT *
+        FROM class_order
+        WHERE class_order_id = #{classOrderId}
+    </select>
 
 </mapper>

@@ -61,4 +61,14 @@ public class MemberServiceImpl implements MemberService {
     public List<Member> selectByMemberAccount(Integer memberAccount) {
         return memberMapper.selectByMemberAccount(memberAccount);
     }
+
+    @Override
+    public Boolean deductMemberClass(Integer memberAccount) {
+        return memberMapper.deductMemberClass(memberAccount);
+    }
+
+    @Override
+    public Boolean refundMemberClass(Integer memberAccount) {
+        return memberMapper.refundMemberClass(memberAccount);
+    }
 }

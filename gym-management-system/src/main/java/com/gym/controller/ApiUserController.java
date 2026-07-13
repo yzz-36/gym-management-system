@@ -79,8 +79,18 @@ public class ApiUserController {
     }
 
     @PostMapping("/delUserClass")
-    public ResponseEntity<Map<String, Object>> deleteUserClass(Integer classOrderId) {
-        classOrderService.deleteByClassOrderId(classOrderId);
+    public ResponseEntity<Map<String, Object>> deleteUserClass(Integer classOrderId, HttpSession session) {
+        ClassOrder order = classOrderService.selectByClassOrderId(classOrderId);
+        if (order != null) {
+            classOrderService.deleteByClassOrderId(classOrderId);
+            memberService.refundMemberClass(order.getMemberAccount());
+
+            Member sessionMember = (Member) session.getAttribute("user");
+            if (sessionMember != null && sessionMember.getMemberAccount().equals(order.getMemberAccount())) {
+                Member updated = memberService.selectByMemberAccount(order.getMemberAccount()).get(0);
+                session.setAttribute("user", updated);
+            }
+        }
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         return ResponseEntity.ok(resp);
@@ -110,6 +120,13 @@ public class ApiUserController {
             return ResponseEntity.ok(resp);
         }
 
+        if (member.getCardNextClass() == null || member.getCardNextClass() <= 0) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "剩余课时不足，无法报名");
+            return ResponseEntity.ok(resp);
+        }
+
         String className = classTable.getClassName();
         String coach = classTable.getCoach();
         String classBegin = classTable.getClassBegin();
@@ -119,12 +136,28 @@ public class ApiUserController {
         ClassOrder classOrder = new ClassOrder(classId, className, coach, memberName, memberAccount, classBegin);
 
         ClassOrder classOrder1 = classOrderService.selectMemberByClassIdAndMemberAccount(classId, memberAccount);
-        if (classOrder1 == null) {
-            classOrderService.insertClassOrder(classOrder);
+        if (classOrder1 != null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "您已报名该课程，请勿重复报名");
+            return ResponseEntity.ok(resp);
         }
+
+        classOrderService.insertClassOrder(classOrder);
+        Boolean deducted = memberService.deductMemberClass(memberAccount);
+        if (!deducted) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课时扣减失败");
+            return ResponseEntity.ok(resp);
+        }
+
+        Member updated = memberService.selectByMemberAccount(memberAccount).get(0);
+        session.setAttribute("user", updated);
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
+        resp.put("message", "报名成功，剩余课时：" + updated.getCardNextClass());
         return ResponseEntity.ok(resp);
     }
 }
