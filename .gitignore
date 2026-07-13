@@ -1,0 +1,11 @@
+*.log
+*.tmp
+
+gym-management-system/target/
+gym-management-system/.idea/
+
+frontend/node_modules/
+frontend/dist/
+frontend/.vscode/
+
+gym-management-system/src/main/resources/application.yml
