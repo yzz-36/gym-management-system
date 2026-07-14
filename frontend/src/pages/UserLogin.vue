@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; justify-content: center; padding: 40px">
     <el-card style="width: 420px">
-      <h2 style="margin: 0 0 16px 0; text-align: center">会员登录</h2>
+      <h2 style="margin: 0 0 16px 0; text-align: center">用户登录</h2>
 
       <el-input v-model="form.memberAccount" placeholder="账号" />
       <el-input
@@ -19,7 +19,8 @@
 
       <div style="color: #d00; margin-top: 10px" v-if="msg">{{ msg }}</div>
 
-      <div style="text-align: center; margin-top: 14px">
+      <div style="text-align: center; margin-top: 14px; display: flex; justify-content: space-between">
+        <el-link type="primary" @click="router.push('/toUserRegister')">注册账号</el-link>
         <el-link type="primary" @click="router.push('/')">转到管理员登录</el-link>
       </div>
     </el-card>

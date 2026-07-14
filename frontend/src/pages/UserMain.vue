@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 24px">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
-      <h2 style="margin: 0">会员主页</h2>
+      <h2 style="margin: 0">用户主页</h2>
       <el-button type="danger" @click="logout">退出登录</el-button>
     </div>
 

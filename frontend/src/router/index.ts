@@ -22,11 +22,15 @@ import UserToUpdateInfo from '../pages/UserToUpdateInfo.vue'
 import UserToUserClass from '../pages/UserToUserClass.vue'
 import UserToApplyClass from '../pages/UserToApplyClass.vue'
 import UserChat from '../pages/UserChat.vue'
+import UserRegister from '../pages/UserRegister.vue'
+import UserToApplyCard from '../pages/UserToApplyCard.vue'
+import MemberCardApplications from '../pages/MemberCardApplications.vue'
 import api from '../api/client'
 
 const routes = [
   { path: '/', component: AdminLogin },
   { path: '/toUserLogin', component: UserLogin },
+  { path: '/toUserRegister', component: UserRegister },
 
   { path: '/toAdminMain', component: AdminMain, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/toUserMain', component: UserMain, meta: { requiresAuth: true, role: 'user' } },
@@ -36,6 +40,7 @@ const routes = [
   { path: '/member/toAddMember', component: MemberToAddMember, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/member/toUpdateMember', component: MemberToUpdateMember, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/member/toSelByCard', component: MemberToSelByCard, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/member/cardApplications', component: MemberCardApplications, meta: { requiresAuth: true, role: 'admin' } },
 
   { path: '/employee/selEmployee', component: EmployeeSelEmployee, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/employee/toAddEmployee', component: EmployeeToAddEmployee, meta: { requiresAuth: true, role: 'admin' } },
@@ -55,6 +60,7 @@ const routes = [
   { path: '/user/toUserClass', component: UserToUserClass, meta: { requiresAuth: true, role: 'user' } },
   { path: '/user/toApplyClass', component: UserToApplyClass, meta: { requiresAuth: true, role: 'user' } },
   { path: '/user/toChat', component: UserChat, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/toApplyCard', component: UserToApplyCard, meta: { requiresAuth: true, role: 'user' } },
 
   // fallback
   { path: '/:pathMatch(.*)*', component: NotImplemented }

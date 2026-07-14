@@ -16,4 +16,5 @@ public class Member {
     private String cardTime;
     private Integer cardClass;
     private Integer cardNextClass;
+    private String memberType;
 }

@@ -5,6 +5,14 @@
       <el-button @click="router.push('/user/toUserClass')">返回我的课程</el-button>
     </div>
 
+    <el-alert
+      v-if="member && member.memberType !== 'member'"
+      title="非会员无法报名课程，请联系管理员办理会员卡"
+      type="warning"
+      :closable="false"
+      style="margin-bottom: 16px"
+    />
+
     <el-card>
       <el-table :data="classList" style="width: 100%">
         <el-table-column prop="classId" label="编号" width="120" />
@@ -14,7 +22,12 @@
         <el-table-column prop="coach" label="教练" width="160" />
         <el-table-column label="操作" width="160">
           <template #default="scope">
-            <el-button size="small" type="primary" @click="apply(scope.row.classId)">报名</el-button>
+            <el-button
+              size="small"
+              type="primary"
+              :disabled="member && member.memberType !== 'member'"
+              @click="apply(scope.row.classId)"
+            >报名</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -31,10 +44,12 @@ import api, { postForm } from '../api/client'
 
 const router = useRouter()
 const classList = ref([])
+const member = ref(null)
 
 async function load() {
   const resp = await api.get('/api/user/toApplyClass')
   classList.value = resp.data?.classList || []
+  member.value = resp.data?.member || null
 }
 
 async function apply(classId) {
