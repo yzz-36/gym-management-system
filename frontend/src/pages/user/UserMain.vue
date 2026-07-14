@@ -79,7 +79,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { SwitchButton } from '@element-plus/icons-vue'
-import api, { postForm } from '../api/client'
+import api, { postForm } from '../../api/client'
 
 const router = useRouter()
 const member = ref(null)
@@ -93,7 +93,7 @@ async function load() {
 async function logout() {
   sessionStorage.removeItem('gym_chat_messages')
   await postForm('/api/logout', {})
-  router.push('/toUserLogin')
+  router.push('/')
 }
 
 onMounted(() => {

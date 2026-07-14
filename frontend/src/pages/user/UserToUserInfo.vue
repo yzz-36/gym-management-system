@@ -26,7 +26,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../api/client'
+import api from '../../api/client'
 
 const router = useRouter()
 const member = ref(null)

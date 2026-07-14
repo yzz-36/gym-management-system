@@ -50,8 +50,8 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { postForm } from '../api/client'
-import api from '../api/client'
+import { postForm } from '../../api/client'
+import api from '../../api/client'
 
 const member = ref({})
 const phone = ref('')
