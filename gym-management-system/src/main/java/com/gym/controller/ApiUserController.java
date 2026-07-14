@@ -107,6 +107,16 @@ public class ApiUserController {
         Member member = (Member) session.getAttribute("user");
         List<ClassTable> classList = classTableService.findAll();
 
+        // 每次都从数据库查最新的 member 信息，确保 memberType 和课时是最新的
+        if (member != null) {
+            List<Member> latest = memberService.selectByMemberAccount(member.getMemberAccount());
+            if (latest != null && !latest.isEmpty()) {
+                Member fresh = latest.get(0);
+                session.setAttribute("user", fresh);
+                member = fresh;
+            }
+        }
+
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         resp.put("member", member);
@@ -123,6 +133,20 @@ public class ApiUserController {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
             resp.put("message", "会话已失效或课程不存在");
+            return ResponseEntity.ok(resp);
+        }
+
+        // 报名前再从数据库查一次最新状态
+        List<Member> latestList = memberService.selectByMemberAccount(member.getMemberAccount());
+        if (latestList != null && !latestList.isEmpty()) {
+            member = latestList.get(0);
+            session.setAttribute("user", member);
+        }
+
+        if (!"member".equals(member.getMemberType())) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "非会员无法报名课程，请先办理会员卡");
             return ResponseEntity.ok(resp);
         }
 
