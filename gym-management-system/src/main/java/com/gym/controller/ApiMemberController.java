@@ -226,7 +226,7 @@ public class ApiMemberController {
     }
 
     @PostMapping("/cancelMember")
-    public ResponseEntity<Map<String, Object>> cancelMember(Integer memberAccount) {
+    public ResponseEntity<Map<String, Object>> cancelMember(Integer memberAccount, String remark) {
         if (memberAccount == null) {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
@@ -243,12 +243,33 @@ public class ApiMemberController {
         }
 
         Member member = members.get(0);
+        if (!"member".equals(member.getMemberType())) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "该用户不是会员");
+            return ResponseEntity.ok(resp);
+        }
+
         member.setMemberType("visitor");
         member.setCardTime(null);
         member.setCardExpireTime(null);
         member.setCardClass(null);
         member.setCardNextClass(null);
         Boolean result = memberService.updateMemberByMemberAccount(member);
+
+        if (result != null && result) {
+            CardApplication cancelRecord = new CardApplication();
+            cancelRecord.setMemberAccount(member.getMemberAccount());
+            cancelRecord.setMemberName(member.getMemberName());
+            cancelRecord.setMemberPhone(member.getMemberPhone() != null ? String.valueOf(member.getMemberPhone()) : "");
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            cancelRecord.setApplyTime(sdf.format(date));
+            cancelRecord.setStatus("cancelled");
+            cancelRecord.setRemark(remark != null && !remark.trim().isEmpty() ? remark : "管理员取消会员资格");
+            cancelRecord.setType("cancel");
+            cardApplicationService.insert(cancelRecord);
+        }
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", result != null && result);
