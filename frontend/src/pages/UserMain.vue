@@ -28,6 +28,7 @@ async function load() {
 }
 
 async function logout() {
+  sessionStorage.removeItem('gym_chat_messages')
   await postForm('/api/logout', {})
   router.push('/toUserLogin')
 }

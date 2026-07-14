@@ -41,6 +41,19 @@ public class ApiEmployeeController {
 
     @PostMapping("/addEmployee")
     public ResponseEntity<Map<String, Object>> addEmployee(Employee employee) {
+        if (employee.getEmployeeName() == null || employee.getEmployeeName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "员工姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (employee.getEmployeeGender() == null || employee.getEmployeeGender().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "员工性别不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
         Random random = new Random();
         String account1 = "1010";
         for (int i = 0; i < 5; i++) {
@@ -55,18 +68,32 @@ public class ApiEmployeeController {
         employee.setEmployeeAccount(account);
         employee.setEntryTime(nowDay);
 
-        employeeService.insertEmployee(employee);
+        Boolean result = employeeService.insertEmployee(employee);
 
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "新增员工失败");
+        }
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/delEmployee")
     public ResponseEntity<Map<String, Object>> deleteEmployee(Integer employeeAccount) {
-        employeeService.deleteByEmployeeAccount(employeeAccount);
+        if (employeeAccount == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "员工账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = employeeService.deleteByEmployeeAccount(employeeAccount);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "删除失败，员工不存在");
+        }
         return ResponseEntity.ok(resp);
     }
 
@@ -81,9 +108,26 @@ public class ApiEmployeeController {
 
     @PostMapping("/updateEmployee")
     public ResponseEntity<Map<String, Object>> updateEmployee(Employee employee) {
-        employeeService.updateMemberByEmployeeAccount(employee);
+        if (employee.getEmployeeAccount() == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "员工账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (employee.getEmployeeName() == null || employee.getEmployeeName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "员工姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = employeeService.updateEmployeeByEmployeeAccount(employee);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "更新失败");
+        }
         return ResponseEntity.ok(resp);
     }
 }

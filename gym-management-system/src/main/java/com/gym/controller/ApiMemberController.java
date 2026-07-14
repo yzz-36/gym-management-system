@@ -40,6 +40,25 @@ public class ApiMemberController {
 
     @PostMapping("/addMember")
     public ResponseEntity<Map<String, Object>> addMember(Member member) {
+        if (member.getMemberName() == null || member.getMemberName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "会员姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberGender() == null || member.getMemberGender().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "会员性别不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getCardClass() == null || member.getCardClass() <= 0) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课程数量必须大于0");
+            return ResponseEntity.ok(resp);
+        }
+
         Random random = new Random();
         String account1 = "2021";
         for (int i = 0; i < 5; i++) {
@@ -47,7 +66,6 @@ public class ApiMemberController {
         }
         Integer account = Integer.parseInt(account1);
 
-        // 初始密码固定为 123456（与你原项目保持一致）
         String password = "123456";
 
         Date date = new Date();
@@ -61,18 +79,32 @@ public class ApiMemberController {
         member.setCardTime(nowDay);
         member.setCardNextClass(nextClass);
 
-        memberService.insertMember(member);
+        Boolean result = memberService.insertMember(member);
 
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "新增会员失败");
+        }
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/delMember")
     public ResponseEntity<Map<String, Object>> deleteMember(Integer memberAccount) {
-        memberService.deleteByMemberAccount(memberAccount);
+        if (memberAccount == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "会员账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = memberService.deleteByMemberAccount(memberAccount);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "删除失败，会员不存在");
+        }
         return ResponseEntity.ok(resp);
     }
 
@@ -87,9 +119,26 @@ public class ApiMemberController {
 
     @PostMapping("/updateMember")
     public ResponseEntity<Map<String, Object>> updateMember(Member member) {
-        memberService.updateMemberByMemberAccount(member);
+        if (member.getMemberAccount() == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "会员账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberName() == null || member.getMemberName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "会员姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = memberService.updateMemberByMemberAccount(member);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "更新失败");
+        }
         return ResponseEntity.ok(resp);
     }
 

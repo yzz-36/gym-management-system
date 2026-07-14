@@ -30,8 +30,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Boolean updateMemberByEmployeeAccount(Employee employee) {
-        return employeeMapper.updateMemberByEmployeeAccount(employee);
+    public Boolean updateEmployeeByEmployeeAccount(Employee employee) {
+        return employeeMapper.updateEmployeeByEmployeeAccount(employee);
     }
 
     @Override

@@ -51,18 +51,54 @@ public class ApiClassController {
 
     @PostMapping("/addClass")
     public ResponseEntity<Map<String, Object>> addClass(ClassTable classTable) {
-        classTableService.insertClass(classTable);
+        if (classTable.getClassName() == null || classTable.getClassName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课程名称不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (classTable.getCoach() == null || classTable.getCoach().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "教练姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (classTable.getClassBegin() == null || classTable.getClassBegin().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "上课时间不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = classTableService.insertClass(classTable);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "新增课程失败");
+        }
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/delClass")
     public ResponseEntity<Map<String, Object>> deleteClass(Integer classId) {
-        classTableService.deleteClassByClassId(classId);
-        classTableService.deleteOrderByClassId(classId);
+        if (classId == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课程ID不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = classTableService.deleteClassByClassId(classId);
+        if (result != null && result) {
+            classTableService.deleteOrderByClassId(classId);
+        }
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "删除失败，课程不存在");
+        }
         return ResponseEntity.ok(resp);
     }
 }

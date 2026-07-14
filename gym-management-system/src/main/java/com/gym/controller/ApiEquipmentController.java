@@ -31,9 +31,20 @@ public class ApiEquipmentController {
 
     @PostMapping("/delEquipment")
     public ResponseEntity<Map<String, Object>> deleteEquipment(Integer equipmentId) {
-        equipmentService.deleteByEquipmentId(equipmentId);
+        if (equipmentId == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器械ID不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = equipmentService.deleteByEquipmentId(equipmentId);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "删除失败，器械不存在");
+        }
         return ResponseEntity.ok(resp);
     }
 
@@ -55,17 +66,51 @@ public class ApiEquipmentController {
 
     @PostMapping("/updateEquipment")
     public ResponseEntity<Map<String, Object>> updateEquipment(Equipment equipment) {
-        equipmentService.updateEquipmentByEquipmentId(equipment);
+        if (equipment.getEquipmentId() == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器械ID不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (equipment.getEquipmentName() == null || equipment.getEquipmentName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器械名称不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = equipmentService.updateEquipmentByEquipmentId(equipment);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "更新失败");
+        }
         return ResponseEntity.ok(resp);
     }
 
     @PostMapping("/addEquipment")
     public ResponseEntity<Map<String, Object>> addEquipment(Equipment equipment) {
-        equipmentService.insertEquipment(equipment);
+        if (equipment.getEquipmentName() == null || equipment.getEquipmentName().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器械名称不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (equipment.getEquipmentLocation() == null || equipment.getEquipmentLocation().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器械位置不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = equipmentService.insertEquipment(equipment);
+
         Map<String, Object> resp = new HashMap<>();
-        resp.put("success", true);
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "新增器械失败");
+        }
         return ResponseEntity.ok(resp);
     }
 }

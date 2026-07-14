@@ -48,17 +48,35 @@ type ChatMessage = {
   createdAt: number
 }
 
+const CHAT_STORAGE_KEY = 'gym_chat_messages'
+
 const draft = ref('')
 const isSending = ref(false)
 const scrollbarRef = ref<any>(null)
-const messages = ref<ChatMessage[]>([
-  {
-    id: crypto.randomUUID(),
-    role: 'assistant',
-    text: '你好，我是系统内置的 AI 助手。你可以问我训练计划、饮食建议或课程安排相关的问题。',
-    createdAt: Date.now()
-  }
-])
+
+const welcomeMessage: ChatMessage = {
+  id: crypto.randomUUID(),
+  role: 'assistant',
+  text: '你好，我是系统内置的 AI 助手。你可以问我训练计划、饮食建议或课程安排相关的问题。',
+  createdAt: Date.now()
+}
+
+function loadMessages(): ChatMessage[] {
+  try {
+    const saved = sessionStorage.getItem(CHAT_STORAGE_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved) as ChatMessage[]
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed
+    }
+  } catch { /* 忽略解析错误 */ }
+  return [welcomeMessage]
+}
+
+function saveMessages() {
+  sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.value))
+}
+
+const messages = ref<ChatMessage[]>(loadMessages())
 
 function pushMessage(role: ChatRole, text: string) {
   messages.value.push({
@@ -67,6 +85,7 @@ function pushMessage(role: ChatRole, text: string) {
     text,
     createdAt: Date.now()
   })
+  saveMessages()
 }
 
 async function scrollToBottom() {
@@ -107,7 +126,8 @@ async function send() {
 }
 
 function clearChat() {
-  messages.value = [messages.value[0]].filter(Boolean) as ChatMessage[]
+  messages.value = [welcomeMessage]
+  saveMessages()
 }
 
 function buildPlaceholderReply(userText: string) {
