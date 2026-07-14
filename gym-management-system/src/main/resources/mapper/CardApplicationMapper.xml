@@ -18,8 +18,8 @@
     </select>
 
     <insert id="insert" parameterType="cardApplication">
-        INSERT INTO card_application (member_account, member_name, member_phone, apply_time, status, remark)
-        VALUES (#{memberAccount}, #{memberName}, #{memberPhone}, #{applyTime}, #{status}, #{remark})
+        INSERT INTO card_application (member_account, member_name, member_phone, apply_time, status, remark, type)
+        VALUES (#{memberAccount}, #{memberName}, #{memberPhone}, #{applyTime}, #{status}, #{remark}, #{type})
     </insert>
 
     <update id="updateStatus" parameterType="cardApplication">

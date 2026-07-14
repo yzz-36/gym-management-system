@@ -15,4 +15,5 @@ public class CardApplication {
     private String applyTime;
     private String status;
     private String remark;
+    private String type;
 }
