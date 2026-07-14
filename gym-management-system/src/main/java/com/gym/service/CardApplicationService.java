@@ -13,4 +13,6 @@ public interface CardApplicationService {
     Boolean updateStatus(CardApplication application);
 
     List<CardApplication> findByMemberAccount(Integer memberAccount);
+
+    Boolean deleteByMemberAccount(Integer memberAccount);
 }

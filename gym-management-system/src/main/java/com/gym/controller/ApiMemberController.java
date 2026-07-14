@@ -3,6 +3,7 @@ package com.gym.controller;
 import com.gym.pojo.CardApplication;
 import com.gym.pojo.Member;
 import com.gym.service.CardApplicationService;
+import com.gym.service.ClassOrderService;
 import com.gym.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ public class ApiMemberController {
     private MemberService memberService;
     @Autowired
     private CardApplicationService cardApplicationService;
+    @Autowired
+    private ClassOrderService classOrderService;
 
     @GetMapping("/selMember")
     public Map<String, Object> selectMember() {
@@ -101,6 +104,9 @@ public class ApiMemberController {
             resp.put("message", "会员账号不能为空");
             return ResponseEntity.ok(resp);
         }
+
+        classOrderService.deleteByMemberAccount(memberAccount);
+        cardApplicationService.deleteByMemberAccount(memberAccount);
 
         Boolean result = memberService.deleteByMemberAccount(memberAccount);
 

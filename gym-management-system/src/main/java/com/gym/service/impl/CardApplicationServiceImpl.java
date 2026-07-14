@@ -33,4 +33,9 @@ public class CardApplicationServiceImpl implements CardApplicationService {
     public List<CardApplication> findByMemberAccount(Integer memberAccount) {
         return cardApplicationMapper.findByMemberAccount(memberAccount);
     }
+
+    @Override
+    public Boolean deleteByMemberAccount(Integer memberAccount) {
+        return cardApplicationMapper.deleteByMemberAccount(memberAccount);
+    }
 }

@@ -15,4 +15,6 @@ public interface CardApplicationMapper {
     Boolean updateStatus(CardApplication application);
 
     List<CardApplication> findByMemberAccount(Integer memberAccount);
+
+    Boolean deleteByMemberAccount(Integer memberAccount);
 }

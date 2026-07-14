@@ -29,4 +29,10 @@
         WHERE id = #{id}
     </update>
 
+    <delete id="deleteByMemberAccount" parameterType="java.lang.Integer">
+        DELETE
+        FROM card_application
+        WHERE member_account = #{memberAccount}
+    </delete>
+
 </mapper>

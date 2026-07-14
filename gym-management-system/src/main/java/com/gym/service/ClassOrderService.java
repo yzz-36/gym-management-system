@@ -27,4 +27,7 @@ public interface ClassOrderService {
     //根据订单id查询订单
     ClassOrder selectByClassOrderId(Integer classOrderId);
 
+    //根据会员账号删除所有预约记录
+    Boolean deleteByMemberAccount(Integer memberAccount);
+
 }
