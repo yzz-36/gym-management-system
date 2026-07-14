@@ -11,10 +11,10 @@
 
     <insert id="insertMember" parameterType="member">
         INSERT INTO member (member_account, member_password, member_name, member_gender, member_age, member_height,
-                            member_weight, member_phone, card_time, card_class,
-                            card_next_class)
+                            member_weight, member_phone, card_time, card_expire_time, card_class,
+                            card_next_class, member_type)
         VALUES (#{memberAccount}, #{memberPassword}, #{memberName}, #{memberGender}, #{memberAge}, #{memberHeight},
-                #{memberWeight}, #{memberPhone}, #{cardTime}, #{cardClass}, #{cardNextClass})
+                #{memberWeight}, #{memberPhone}, #{cardTime}, #{cardExpireTime}, #{cardClass}, #{cardNextClass}, #{memberType})
     </insert>
 
     <update id="updateMemberByMemberAccount" parameterType="member">
@@ -27,8 +27,11 @@
             member_height   = #{memberHeight},
             member_weight   = #{memberWeight},
             member_phone    = #{memberPhone},
+            card_time       = #{cardTime},
+            card_expire_time = #{cardExpireTime},
             card_class      = #{cardClass},
-            card_next_class = #{cardNextClass}
+            card_next_class = #{cardNextClass},
+            member_type     = #{memberType}
         WHERE member_account = #{memberAccount}
     </update>
 

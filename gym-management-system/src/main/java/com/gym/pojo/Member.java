@@ -14,6 +14,7 @@ public class Member {
     private Integer memberWeight;
     private Long memberPhone;
     private String cardTime;
+    private String cardExpireTime;
     private Integer cardClass;
     private Integer cardNextClass;
     private String memberType;

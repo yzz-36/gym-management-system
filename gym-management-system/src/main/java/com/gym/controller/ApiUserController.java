@@ -35,6 +35,55 @@ public class ApiUserController {
     @Autowired
     private CardApplicationService cardApplicationService;
 
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> register(Member member) {
+        Map<String, Object> resp = new HashMap<>();
+
+        if (member.getMemberAccount() == null) {
+            resp.put("success", false);
+            resp.put("message", "账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberPassword() == null || member.getMemberPassword().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "密码不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberName() == null || member.getMemberName().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberGender() == null || member.getMemberGender().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "性别不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        List<Member> existing = memberService.selectByMemberAccount(member.getMemberAccount());
+        if (existing != null && !existing.isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "该账号已被注册");
+            return ResponseEntity.ok(resp);
+        }
+
+        member.setMemberType("visitor");
+        member.setCardTime(null);
+        member.setCardExpireTime(null);
+        member.setCardClass(null);
+        member.setCardNextClass(null);
+
+        Boolean result = memberService.insertMember(member);
+
+        resp.put("success", result != null && result);
+        if (result != null && result) {
+            resp.put("message", "注册成功");
+        } else {
+            resp.put("message", "注册失败");
+        }
+        return ResponseEntity.ok(resp);
+    }
+
     @GetMapping("/toUserInfo")
     public Map<String, Object> toUserInfo(HttpSession session) {
         Member member = (Member) session.getAttribute("user");

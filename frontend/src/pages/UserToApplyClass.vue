@@ -13,6 +13,14 @@
       style="margin-bottom: 16px"
     />
 
+    <el-alert
+      v-if="member && member.memberType === 'member' && isExpired"
+      title="会员已到期，请联系管理员续期"
+      type="warning"
+      :closable="false"
+      style="margin-bottom: 16px"
+    />
+
     <el-card>
       <el-table :data="classList" style="width: 100%">
         <el-table-column prop="classId" label="编号" width="120" />
@@ -25,7 +33,7 @@
             <el-button
               size="small"
               type="primary"
-              :disabled="member && member.memberType !== 'member'"
+              :disabled="!canApply"
               @click="apply(scope.row.classId)"
             >报名</el-button>
           </template>
@@ -38,13 +46,28 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import api, { postForm } from '../api/client'
 
 const router = useRouter()
 const classList = ref([])
 const member = ref(null)
+
+const isExpired = computed(() => {
+  if (!member.value || !member.value.cardExpireTime) return false
+  const expireDate = new Date(member.value.cardExpireTime)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  expireDate.setHours(0, 0, 0, 0)
+  return expireDate < today
+})
+
+const canApply = computed(() => {
+  if (!member.value) return false
+  if (member.value.memberType !== 'member') return false
+  return !isExpired.value
+})
 
 async function load() {
   const resp = await api.get('/api/user/toApplyClass')
