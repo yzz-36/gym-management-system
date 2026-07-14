@@ -2,20 +2,20 @@
   <div class="login-page">
     <div class="login-card">
       <div class="login-header">
-        <div class="login-icon">👤</div>
-        <h2 class="login-title">管理员登录</h2>
-        <div class="login-subtitle">健身房管理系统</div>
+        <div class="login-icon">🏋️</div>
+        <h2 class="login-title">用户登录</h2>
+        <div class="login-subtitle">欢迎使用健身房管理系统</div>
       </div>
 
       <div class="login-form">
         <div class="input-group">
           <label>账号</label>
-          <el-input v-model="form.adminAccount" placeholder="请输入管理员账号" size="large" />
+          <el-input v-model="form.memberAccount" placeholder="请输入账号" size="large" />
         </div>
         <div class="input-group">
           <label>密码</label>
           <el-input
-            v-model="form.adminPassword"
+            v-model="form.memberPassword"
             placeholder="请输入密码"
             type="password"
             show-password
@@ -30,8 +30,9 @@
           登 录
         </el-button>
 
-        <div class="login-links" style="justify-content: center">
-          <el-link type="primary" @click="router.push('/toUserLogin')">转到用户登录</el-link>
+        <div class="login-links">
+          <el-link type="primary" @click="router.push('/toUserRegister')">注册账号</el-link>
+          <el-link type="primary" @click="router.push('/admin')">管理员登录</el-link>
         </div>
       </div>
     </div>
@@ -41,24 +42,24 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { postForm } from '../api/client'
+import { postForm } from '../../api/client'
 
 const router = useRouter()
 const form = reactive({
-  adminAccount: '',
-  adminPassword: ''
+  memberAccount: '',
+  memberPassword: ''
 })
 const msg = ref('')
 
 async function submit() {
   msg.value = ''
   try {
-    const resp = await postForm('/api/adminLogin', {
-      adminAccount: form.adminAccount,
-      adminPassword: form.adminPassword
+    const resp = await postForm('/api/userLogin', {
+      memberAccount: form.memberAccount,
+      memberPassword: form.memberPassword
     })
     if (resp.data && resp.data.success) {
-      router.push('/toAdminMain')
+      router.push('/toUserMain')
     } else {
       msg.value = resp.data?.message || '登录失败'
     }
@@ -74,14 +75,14 @@ async function submit() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 .login-card {
   width: 420px;
   background: #fff;
   border-radius: 20px;
   padding: 40px 36px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 .login-header {
   text-align: center;

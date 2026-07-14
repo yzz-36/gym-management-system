@@ -52,7 +52,7 @@
 import { onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { SwitchButton } from '@element-plus/icons-vue'
-import api, { postForm } from '../api/client'
+import api, { postForm } from '../../api/client'
 
 const router = useRouter()
 const totals = reactive({

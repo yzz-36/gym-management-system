@@ -48,7 +48,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { postForm } from '../api/client'
+import api, { postForm } from '../../api/client'
 
 const router = useRouter()
 const classList = ref([])

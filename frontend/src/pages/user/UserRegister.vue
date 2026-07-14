@@ -45,7 +45,7 @@
         </el-button>
 
         <div class="login-links">
-          <el-link type="primary" @click="router.push('/toUserLogin')">已有账号？去登录</el-link>
+          <el-link type="primary" @click="router.push('/')">已有账号？去登录</el-link>
         </div>
       </div>
     </div>
@@ -55,7 +55,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { postForm } from '../api/client'
+import { postForm } from '../../api/client'
 
 const router = useRouter()
 const form = reactive({
@@ -84,7 +84,7 @@ async function submit() {
     })
     if (resp.data && resp.data.success) {
       alert('注册成功，请登录')
-      router.push('/toUserLogin')
+      router.push('/')
     } else {
       msg.value = resp.data?.message || '注册失败'
     }

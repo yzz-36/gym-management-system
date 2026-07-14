@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, ref } from 'vue'
-import { postForm } from '../api/client'
+import { postForm } from '../../api/client'
 
 type ChatRole = 'user' | 'assistant'
 type ChatMessage = {

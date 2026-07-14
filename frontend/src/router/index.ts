@@ -1,35 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NotImplemented from '../pages/NotImplemented.vue'
-import AdminLogin from '../pages/AdminLogin.vue'
-import UserLogin from '../pages/UserLogin.vue'
-import AdminMain from '../pages/AdminMain.vue'
-import UserMain from '../pages/UserMain.vue'
-import ClassSelClass from '../pages/ClassSelClass.vue'
-import ClassToAddClass from '../pages/ClassToAddClass.vue'
-import ClassSelClassOrder from '../pages/ClassSelClassOrder.vue'
-import MemberSelMember from '../pages/MemberSelMember.vue'
-import MemberToAddMember from '../pages/MemberToAddMember.vue'
-import MemberToUpdateMember from '../pages/MemberToUpdateMember.vue'
-import MemberToSelByCard from '../pages/MemberToSelByCard.vue'
-import EmployeeSelEmployee from '../pages/EmployeeSelEmployee.vue'
-import EmployeeToAddEmployee from '../pages/EmployeeToAddEmployee.vue'
-import EmployeeToUpdateEmployee from '../pages/EmployeeToUpdateEmployee.vue'
-import EquipmentSelEquipment from '../pages/EquipmentSelEquipment.vue'
-import EquipmentToAddEquipment from '../pages/EquipmentToAddEquipment.vue'
-import EquipmentToUpdateEquipment from '../pages/EquipmentToUpdateEquipment.vue'
-import UserToUserInfo from '../pages/UserToUserInfo.vue'
-import UserToUpdateInfo from '../pages/UserToUpdateInfo.vue'
-import UserToUserClass from '../pages/UserToUserClass.vue'
-import UserToApplyClass from '../pages/UserToApplyClass.vue'
-import UserChat from '../pages/UserChat.vue'
-import UserRegister from '../pages/UserRegister.vue'
-import UserToApplyCard from '../pages/UserToApplyCard.vue'
-import MemberCardApplications from '../pages/MemberCardApplications.vue'
+import NotImplemented from '../pages/common/NotImplemented.vue'
+import AdminLogin from '../pages/admin/AdminLogin.vue'
+import UserLogin from '../pages/user/UserLogin.vue'
+import AdminMain from '../pages/admin/AdminMain.vue'
+import UserMain from '../pages/user/UserMain.vue'
+import ClassSelClass from '../pages/admin/ClassSelClass.vue'
+import ClassToAddClass from '../pages/admin/ClassToAddClass.vue'
+import ClassSelClassOrder from '../pages/admin/ClassSelClassOrder.vue'
+import MemberSelMember from '../pages/admin/MemberSelMember.vue'
+import MemberToAddMember from '../pages/admin/MemberToAddMember.vue'
+import MemberToUpdateMember from '../pages/admin/MemberToUpdateMember.vue'
+import MemberToSelByCard from '../pages/admin/MemberToSelByCard.vue'
+import EmployeeSelEmployee from '../pages/admin/EmployeeSelEmployee.vue'
+import EmployeeToAddEmployee from '../pages/admin/EmployeeToAddEmployee.vue'
+import EmployeeToUpdateEmployee from '../pages/admin/EmployeeToUpdateEmployee.vue'
+import EquipmentSelEquipment from '../pages/admin/EquipmentSelEquipment.vue'
+import EquipmentToAddEquipment from '../pages/admin/EquipmentToAddEquipment.vue'
+import EquipmentToUpdateEquipment from '../pages/admin/EquipmentToUpdateEquipment.vue'
+import UserToUserInfo from '../pages/user/UserToUserInfo.vue'
+import UserToUpdateInfo from '../pages/user/UserToUpdateInfo.vue'
+import UserToUserClass from '../pages/user/UserToUserClass.vue'
+import UserToApplyClass from '../pages/user/UserToApplyClass.vue'
+import UserChat from '../pages/user/UserChat.vue'
+import UserRegister from '../pages/user/UserRegister.vue'
+import UserToApplyCard from '../pages/user/UserToApplyCard.vue'
+import MemberCardApplications from '../pages/admin/MemberCardApplications.vue'
 import api from '../api/client'
 
 const routes = [
-  { path: '/', component: AdminLogin },
-  { path: '/toUserLogin', component: UserLogin },
+  { path: '/', component: UserLogin },
+  { path: '/admin', component: AdminLogin },
   { path: '/toUserRegister', component: UserRegister },
 
   { path: '/toAdminMain', component: AdminMain, meta: { requiresAuth: true, role: 'admin' } },
@@ -85,7 +85,7 @@ router.beforeEach(async (to) => {
     return true
   } catch (e) {
     // 未登录/会话失效：按角色回登录页
-    return { path: role === 'user' ? '/toUserLogin' : '/' }
+    return { path: role === 'user' ? '/' : '/admin' }
   }
 })
 

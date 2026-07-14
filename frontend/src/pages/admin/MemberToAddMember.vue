@@ -40,7 +40,7 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { postForm } from '../api/client'
+import { postForm } from '../../api/client'
 
 const router = useRouter()
 const msg = ref('')

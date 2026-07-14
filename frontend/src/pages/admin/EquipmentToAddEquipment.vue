@@ -31,7 +31,7 @@
 <script setup>
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { postForm } from '../api/client'
+import { postForm } from '../../api/client'
 
 const router = useRouter()
 const form = reactive({

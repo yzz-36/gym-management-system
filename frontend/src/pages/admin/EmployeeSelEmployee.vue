@@ -35,7 +35,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api, { postForm } from '../api/client'
+import api, { postForm } from '../../api/client'
 
 const router = useRouter()
 const employeeList = ref([])

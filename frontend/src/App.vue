@@ -16,7 +16,7 @@ const showLayout = computed(() => {
   const p = route.path
 
   // 登录入口/登录页不展示侧边栏
-  if (p === '/' || p === '/toAdminMain' || p === '/toUserLogin' || p === '/toUserMain') {
+  if (p === '/' || p === '/admin' || p === '/toAdminMain' || p === '/toUserMain') {
     // 其中到主页面需要展示侧边栏
     return p === '/toAdminMain' || p === '/toUserMain'
   }
