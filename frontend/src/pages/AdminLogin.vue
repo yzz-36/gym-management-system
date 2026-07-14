@@ -20,7 +20,7 @@
       <div style="color: #d00; margin-top: 10px" v-if="msg">{{ msg }}</div>
 
       <div style="text-align: center; margin-top: 14px">
-        <el-link type="primary" @click="router.push('/toUserLogin')">转到会员登录</el-link>
+        <el-link type="primary" @click="router.push('/toUserLogin')">转到用户登录</el-link>
       </div>
     </el-card>
   </div>

@@ -1,6 +1,8 @@
 package com.gym.controller;
 
+import com.gym.pojo.CardApplication;
 import com.gym.pojo.Member;
+import com.gym.service.CardApplicationService;
 import com.gym.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ public class ApiMemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CardApplicationService cardApplicationService;
 
     @GetMapping("/selMember")
     public Map<String, Object> selectMember() {
@@ -160,6 +164,64 @@ public class ApiMemberController {
             resp.put("noMessage", "会员卡号不存在！");
         }
         return resp;
+    }
+
+    @GetMapping("/cardApplications")
+    public Map<String, Object> cardApplications() {
+        List<CardApplication> list = cardApplicationService.findAll();
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", true);
+        resp.put("list", list);
+        return resp;
+    }
+
+    @PostMapping("/handleCardApplication")
+    public ResponseEntity<Map<String, Object>> handleCardApplication(Integer id, String status, String remark, Integer cardClass) {
+        if (id == null || status == null || status.trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "参数不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        CardApplication application = new CardApplication();
+        application.setId(id);
+        application.setStatus(status);
+        application.setRemark(remark);
+
+        Boolean result = cardApplicationService.updateStatus(application);
+
+        if (result != null && result && "approved".equals(status) && cardClass != null && cardClass > 0) {
+            List<CardApplication> allApps = cardApplicationService.findAll();
+            Integer memberAccount = null;
+            for (CardApplication app : allApps) {
+                if (app.getId().equals(id)) {
+                    memberAccount = app.getMemberAccount();
+                    break;
+                }
+            }
+            if (memberAccount != null) {
+                List<Member> members = memberService.selectByMemberAccount(memberAccount);
+                if (members != null && !members.isEmpty()) {
+                    Member member = members.get(0);
+                    Date date = new Date();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String nowDay = sdf.format(date);
+                    member.setCardTime(nowDay);
+                    member.setCardClass(cardClass);
+                    member.setCardNextClass(cardClass);
+                    member.setMemberType("member");
+                    memberService.updateMemberByMemberAccount(member);
+                }
+            }
+        }
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "处理失败");
+        }
+        return ResponseEntity.ok(resp);
     }
 }
 

@@ -13,18 +13,18 @@
       >
         <template v-if="role === 'admin'">
           <el-menu-item index="/toAdminMain">管理员主页</el-menu-item>
-          <el-menu-item index="/member/toSelByCard">会员卡查询</el-menu-item>
           <el-menu-item index="/member/selMember">会员管理</el-menu-item>
+          <el-menu-item index="/member/cardApplications">办卡申请</el-menu-item>
           <el-menu-item index="/employee/selEmployee">员工管理</el-menu-item>
           <el-menu-item index="/equipment/selEquipment">器材管理</el-menu-item>
           <el-menu-item index="/class/selClass">课程管理</el-menu-item>
-          <el-menu-item index="/class/selClassOrder">报名信息</el-menu-item>
         </template>
 
         <template v-else>
-          <el-menu-item index="/toUserMain">会员主页</el-menu-item>
+          <el-menu-item index="/toUserMain">用户主页</el-menu-item>
           <el-menu-item index="/user/toUserInfo">个人信息</el-menu-item>
           <el-menu-item index="/user/toChat">聊天</el-menu-item>
+          <el-menu-item index="/user/toApplyCard">申请办卡</el-menu-item>
           <el-sub-menu index="user-course">
             <template #title>课程管理</template>
             <el-menu-item index="/user/toApplyClass">报名选课</el-menu-item>
@@ -35,7 +35,7 @@
 
       <div class="role-footer">
         <div class="role-footer-title">你好！</div>
-        <div class="role-footer-text">{{ role === 'admin' ? '管理员' : '尊敬的会员' }}</div>
+        <div class="role-footer-text">{{ role === 'admin' ? '管理员' : '尊敬的用户' }}</div>
       </div>
     </el-aside>
 
