@@ -20,6 +20,11 @@ public class CardApplicationServiceImpl implements CardApplicationService {
     }
 
     @Override
+    public CardApplication findById(Integer id) {
+        return cardApplicationMapper.findById(id);
+    }
+
+    @Override
     public Boolean insert(CardApplication application) {
         return cardApplicationMapper.insert(application);
     }

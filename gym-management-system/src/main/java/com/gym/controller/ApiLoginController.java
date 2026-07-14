@@ -1,8 +1,15 @@
 package com.gym.controller;
 
 import com.gym.pojo.Admin;
+import com.gym.pojo.CardApplication;
+import com.gym.pojo.ClassOrder;
+import com.gym.pojo.ClassTable;
+import com.gym.pojo.Equipment;
 import com.gym.pojo.Member;
 import com.gym.service.AdminService;
+import com.gym.service.CardApplicationService;
+import com.gym.service.ClassOrderService;
+import com.gym.service.ClassTableService;
 import com.gym.service.EmployeeService;
 import com.gym.service.EquipmentService;
 import com.gym.service.MemberService;
@@ -14,8 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -28,16 +38,25 @@ public class ApiLoginController {
     private final AdminService adminService;
     private final EmployeeService employeeService;
     private final EquipmentService equipmentService;
+    private final CardApplicationService cardApplicationService;
+    private final ClassOrderService classOrderService;
+    private final ClassTableService classTableService;
 
     public ApiLoginController(
             MemberService memberService,
             AdminService adminService,
             EmployeeService employeeService,
-            EquipmentService equipmentService) {
+            EquipmentService equipmentService,
+            CardApplicationService cardApplicationService,
+            ClassOrderService classOrderService,
+            ClassTableService classTableService) {
         this.memberService = memberService;
         this.adminService = adminService;
         this.employeeService = employeeService;
         this.equipmentService = equipmentService;
+        this.cardApplicationService = cardApplicationService;
+        this.classOrderService = classOrderService;
+        this.classTableService = classTableService;
     }
 
     @PostMapping("/adminLogin")
@@ -74,6 +93,37 @@ public class ApiLoginController {
         body.put("employeeTotal", session.getAttribute("employeeTotal"));
         body.put("humanTotal", session.getAttribute("humanTotal"));
         body.put("equipmentTotal", session.getAttribute("equipmentTotal"));
+
+        List<CardApplication> pendingApps = cardApplicationService.findAll().stream()
+                .filter(app -> "pending".equals(app.getStatus()) && !"cancel".equals(app.getType()))
+                .collect(Collectors.toList());
+        body.put("pendingApplications", pendingApps);
+
+        List<Member> allMembers = memberService.findAll();
+        List<Member> recentMembers = new ArrayList<>();
+        for (int i = Math.max(0, allMembers.size() - 5); i < allMembers.size(); i++) {
+            recentMembers.add(allMembers.get(i));
+        }
+        body.put("recentMembers", recentMembers);
+
+        List<ClassOrder> allOrders = classOrderService.findAll();
+        body.put("classOrderTotal", allOrders.size());
+
+        List<ClassTable> allClasses = classTableService.findAll();
+        List<ClassTable> recentClasses = new ArrayList<>();
+        for (int i = Math.max(0, allClasses.size() - 5); i < allClasses.size(); i++) {
+            recentClasses.add(allClasses.get(i));
+        }
+        body.put("recentClasses", recentClasses);
+
+        List<Equipment> allEquipment = equipmentService.findAll();
+        long normalCount = allEquipment.stream().filter(e -> "正常".equals(e.getEquipmentStatus())).count();
+        long maintenanceCount = allEquipment.stream().filter(e -> "维护中".equals(e.getEquipmentStatus())).count();
+        long damagedCount = allEquipment.stream().filter(e -> "损坏".equals(e.getEquipmentStatus())).count();
+        body.put("equipmentNormalCount", normalCount);
+        body.put("equipmentMaintenanceCount", maintenanceCount);
+        body.put("equipmentDamagedCount", damagedCount);
+
         return ResponseEntity.ok(body);
     }
 

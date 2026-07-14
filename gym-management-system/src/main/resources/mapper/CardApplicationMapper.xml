@@ -10,6 +10,12 @@
         ORDER BY id DESC
     </select>
 
+    <select id="findById" resultType="cardApplication" parameterType="java.lang.Integer">
+        SELECT *
+        FROM card_application
+        WHERE id = #{id}
+    </select>
+
     <select id="findByMemberAccount" resultType="cardApplication" parameterType="int">
         SELECT *
         FROM card_application

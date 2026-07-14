@@ -8,6 +8,8 @@ public interface CardApplicationService {
 
     List<CardApplication> findAll();
 
+    CardApplication findById(Integer id);
+
     Boolean insert(CardApplication application);
 
     Boolean updateStatus(CardApplication application);
