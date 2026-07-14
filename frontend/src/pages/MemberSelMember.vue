@@ -1,32 +1,46 @@
 <template>
-  <div style="padding: 24px">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px">
-      <h2 style="margin: 0">会员管理</h2>
-      <el-button type="primary" @click="router.push('/member/toAddMember')">添加会员信息</el-button>
+  <div class="page-container">
+    <div class="page-header">
+      <h2 class="page-title">用户管理</h2>
     </div>
 
-    <el-table :data="memberList" style="width: 100%">
-      <el-table-column prop="memberAccount" label="会员账号/卡号" width="140" />
-      <el-table-column prop="memberName" label="姓名" />
-      <el-table-column prop="cardTime" label="办卡时间" width="140" />
-      <el-table-column prop="memberGender" label="性别" width="90" />
-      <el-table-column prop="memberAge" label="年龄" width="80" />
-      <el-table-column prop="memberPhone" label="联系方式" width="140" />
-      <el-table-column prop="memberHeight" label="身高" width="90" />
-      <el-table-column prop="memberWeight" label="体重" width="90" />
-      <el-table-column prop="cardClass" label="购买课时" width="100" />
-      <el-table-column prop="cardNextClass" label="剩余课时" width="100" />
-      <el-table-column label="操作" width="260">
-        <template #default="scope">
-          <el-button size="small" type="info" @click="edit(scope.row.memberAccount)">编辑</el-button>
-          <el-button size="small" type="danger" @click="del(scope.row.memberAccount)" style="margin-left: 8px">
-            删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-card class="table-card">
+      <el-table :data="memberList" style="width: 100%" stripe>
+        <el-table-column prop="memberAccount" label="用户账号" width="130" />
+        <el-table-column prop="memberName" label="姓名" width="100" />
+        <el-table-column prop="memberType" label="身份" width="100" align="center">
+          <template #default="scope">
+            <el-tag :type="scope.row.memberType === 'member' ? 'success' : 'info'" effect="dark" size="small">
+              {{ scope.row.memberType === 'member' ? '会员' : '非会员' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="cardTime" label="办卡时间" width="120" />
+        <el-table-column prop="cardExpireTime" label="到期时间" width="120" />
+        <el-table-column prop="memberGender" label="性别" width="70" align="center" />
+        <el-table-column prop="memberAge" label="年龄" width="70" align="center" />
+        <el-table-column prop="memberPhone" label="联系方式" width="130" />
+        <el-table-column prop="memberHeight" label="身高" width="80" align="center" />
+        <el-table-column prop="memberWeight" label="体重" width="80" align="center" />
+        <el-table-column prop="cardClass" label="总课时" width="90" align="center" />
+        <el-table-column prop="cardNextClass" label="剩余" width="80" align="center">
+          <template #default="scope">
+            <span :class="{ 'text-danger': scope.row.cardNextClass <= 5 }">{{ scope.row.cardNextClass }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="260" fixed="right">
+          <template #default="scope">
+            <el-button size="small" type="primary" plain @click="edit(scope.row.memberAccount)">编辑</el-button>
+            <el-button v-if="scope.row.memberType === 'member'" size="small" type="warning" plain @click="cancelMember(scope.row)">
+              取消会员
+            </el-button>
+            <el-button size="small" type="danger" plain @click="del(scope.row.memberAccount)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <div v-if="!memberList.length" style="color: #666; margin-top: 16px">暂无数据</div>
+      <el-empty v-if="!memberList.length" description="暂无数据" />
+    </el-card>
   </div>
 </template>
 
@@ -47,6 +61,12 @@ function edit(memberAccount) {
   router.push({ path: '/member/toUpdateMember', query: { memberAccount } })
 }
 
+async function cancelMember(member) {
+  if (!confirm(`确定要取消 ${member.memberName} 的会员资格吗？`)) return
+  await postForm('/api/member/cancelMember', { memberAccount: member.memberAccount })
+  await load()
+}
+
 async function del(memberAccount) {
   if (!confirm('确定要删除吗？')) return
   await postForm('/api/member/delMember', { memberAccount })
@@ -57,4 +77,30 @@ onMounted(() => {
   load().catch(() => {})
 })
 </script>
+
+<style scoped>
+.page-container {
+  padding: 28px 32px;
+}
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.page-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+.table-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.text-danger {
+  color: #f5576c;
+  font-weight: 600;
+}
+</style>
 

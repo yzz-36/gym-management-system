@@ -176,7 +176,7 @@ public class ApiMemberController {
     }
 
     @PostMapping("/handleCardApplication")
-    public ResponseEntity<Map<String, Object>> handleCardApplication(Integer id, String status, String remark, Integer cardClass) {
+    public ResponseEntity<Map<String, Object>> handleCardApplication(Integer id, String status, String remark, Integer cardClass, String cardExpireTime) {
         if (id == null || status == null || status.trim().isEmpty()) {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
@@ -208,6 +208,7 @@ public class ApiMemberController {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String nowDay = sdf.format(date);
                     member.setCardTime(nowDay);
+                    member.setCardExpireTime(cardExpireTime);
                     member.setCardClass(cardClass);
                     member.setCardNextClass(cardClass);
                     member.setMemberType("member");
@@ -220,6 +221,39 @@ public class ApiMemberController {
         resp.put("success", result != null && result);
         if (!(result != null && result)) {
             resp.put("message", "处理失败");
+        }
+        return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/cancelMember")
+    public ResponseEntity<Map<String, Object>> cancelMember(Integer memberAccount) {
+        if (memberAccount == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "用户账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        List<Member> members = memberService.selectByMemberAccount(memberAccount);
+        if (members == null || members.isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "用户不存在");
+            return ResponseEntity.ok(resp);
+        }
+
+        Member member = members.get(0);
+        member.setMemberType("visitor");
+        member.setCardTime(null);
+        member.setCardExpireTime(null);
+        member.setCardClass(null);
+        member.setCardNextClass(null);
+        Boolean result = memberService.updateMemberByMemberAccount(member);
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "取消会员失败");
         }
         return ResponseEntity.ok(resp);
     }

@@ -27,6 +27,7 @@ public class SessionAuthInterceptor implements HandlerInterceptor {
         return  uri ==null
                 || uri.startsWith("/api/adminLogin")
                 || uri.startsWith("/api/userLogin")
+                || uri.startsWith("/api/user/register")
                 || uri.startsWith("/api/logout");
     }
 

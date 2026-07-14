@@ -17,10 +17,11 @@
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" />
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作" width="320">
           <template #default="scope">
             <template v-if="scope.row.status === 'pending'">
-              <el-input-number v-model="scope.row.cardClass" :min="1" :max="100" size="small" style="width: 100px" placeholder="课时" />
+              <el-input-number v-model="scope.row.cardClass" :min="1" :max="100" size="small" style="width: 80px" placeholder="课时" />
+              <el-date-picker v-model="scope.row.cardExpireTime" type="date" placeholder="到期时间" size="small" style="width: 130px; margin-left: 8px" />
               <el-button size="small" type="success" @click="approve(scope.row)" style="margin-left: 8px">通过</el-button>
               <el-button size="small" type="danger" @click="reject(scope.row)">拒绝</el-button>
             </template>
@@ -42,7 +43,7 @@ const applicationList = ref([])
 
 async function load() {
   const resp = await api.get('/api/member/cardApplications')
-  applicationList.value = (resp.data?.list || []).map(item => ({ ...item, cardClass: 30 }))
+  applicationList.value = (resp.data?.list || []).map(item => ({ ...item, cardClass: 30, cardExpireTime: '' }))
 }
 
 async function approve(row) {
@@ -50,12 +51,17 @@ async function approve(row) {
     alert('请输入有效的课时数量')
     return
   }
+  if (!row.cardExpireTime) {
+    alert('请选择会员到期时间')
+    return
+  }
   try {
     const resp = await postForm('/api/member/handleCardApplication', {
       id: row.id,
       status: 'approved',
-      remark: '审核通过，分配课时：' + row.cardClass,
-      cardClass: row.cardClass
+      remark: '审核通过，分配课时：' + row.cardClass + '，到期时间：' + row.cardExpireTime,
+      cardClass: row.cardClass,
+      cardExpireTime: row.cardExpireTime
     })
     if (resp.data && resp.data.success) {
       alert('已通过')

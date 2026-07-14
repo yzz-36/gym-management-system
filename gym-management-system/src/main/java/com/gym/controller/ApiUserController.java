@@ -35,6 +35,55 @@ public class ApiUserController {
     @Autowired
     private CardApplicationService cardApplicationService;
 
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, Object>> register(Member member) {
+        Map<String, Object> resp = new HashMap<>();
+
+        if (member.getMemberAccount() == null) {
+            resp.put("success", false);
+            resp.put("message", "账号不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberPassword() == null || member.getMemberPassword().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "密码不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberName() == null || member.getMemberName().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "姓名不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (member.getMemberGender() == null || member.getMemberGender().trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "性别不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        List<Member> existing = memberService.selectByMemberAccount(member.getMemberAccount());
+        if (existing != null && !existing.isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "该账号已被注册");
+            return ResponseEntity.ok(resp);
+        }
+
+        member.setMemberType("visitor");
+        member.setCardTime(null);
+        member.setCardExpireTime(null);
+        member.setCardClass(null);
+        member.setCardNextClass(null);
+
+        Boolean result = memberService.insertMember(member);
+
+        resp.put("success", result != null && result);
+        if (result != null && result) {
+            resp.put("message", "注册成功");
+        } else {
+            resp.put("message", "注册失败");
+        }
+        return ResponseEntity.ok(resp);
+    }
+
     @GetMapping("/toUserInfo")
     public Map<String, Object> toUserInfo(HttpSession session) {
         Member member = (Member) session.getAttribute("user");
@@ -107,6 +156,16 @@ public class ApiUserController {
         Member member = (Member) session.getAttribute("user");
         List<ClassTable> classList = classTableService.findAll();
 
+        // 每次都从数据库查最新的 member 信息，确保 memberType 和课时是最新的
+        if (member != null) {
+            List<Member> latest = memberService.selectByMemberAccount(member.getMemberAccount());
+            if (latest != null && !latest.isEmpty()) {
+                Member fresh = latest.get(0);
+                session.setAttribute("user", fresh);
+                member = fresh;
+            }
+        }
+
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
         resp.put("member", member);
@@ -123,6 +182,20 @@ public class ApiUserController {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
             resp.put("message", "会话已失效或课程不存在");
+            return ResponseEntity.ok(resp);
+        }
+
+        // 报名前再从数据库查一次最新状态
+        List<Member> latestList = memberService.selectByMemberAccount(member.getMemberAccount());
+        if (latestList != null && !latestList.isEmpty()) {
+            member = latestList.get(0);
+            session.setAttribute("user", member);
+        }
+
+        if (!"member".equals(member.getMemberType())) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "非会员无法报名课程，请先办理会员卡");
             return ResponseEntity.ok(resp);
         }
 
