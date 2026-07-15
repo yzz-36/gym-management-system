@@ -31,7 +31,7 @@
         </el-button>
 
         <div class="login-links">
-          <el-link type="primary" @click="router.push('/toUserRegister')">注册账号</el-link>
+          <el-link type="primary" @click="router.push('/register')">注册账号</el-link>
           <el-link type="primary" @click="router.push('/admin')">管理员登录</el-link>
         </div>
       </div>
@@ -60,7 +60,7 @@ async function submit() {
     })
     if (resp.data && resp.data.success) {
       sessionStorage.setItem('gym_user_account', form.memberAccount)
-      router.push('/toUserMain')
+      router.push('/user/home')
     } else {
       msg.value = resp.data?.message || '登录失败'
     }

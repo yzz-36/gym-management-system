@@ -4,63 +4,63 @@ import AdminLogin from '../pages/admin/AdminLogin.vue'
 import UserLogin from '../pages/user/UserLogin.vue'
 import AdminMain from '../pages/admin/AdminMain.vue'
 import UserMain from '../pages/user/UserMain.vue'
-import ClassSelClass from '../pages/admin/ClassSelClass.vue'
-import ClassToAddClass from '../pages/admin/ClassToAddClass.vue'
-import ClassSelClassOrder from '../pages/admin/ClassSelClassOrder.vue'
-import MemberSelMember from '../pages/admin/MemberSelMember.vue'
-import MemberToAddMember from '../pages/admin/MemberToAddMember.vue'
-import MemberToUpdateMember from '../pages/admin/MemberToUpdateMember.vue'
-import MemberToSelByCard from '../pages/admin/MemberToSelByCard.vue'
-import EmployeeSelEmployee from '../pages/admin/EmployeeSelEmployee.vue'
-import EmployeeToAddEmployee from '../pages/admin/EmployeeToAddEmployee.vue'
-import EmployeeToUpdateEmployee from '../pages/admin/EmployeeToUpdateEmployee.vue'
-import EquipmentSelEquipment from '../pages/admin/EquipmentSelEquipment.vue'
-import EquipmentToAddEquipment from '../pages/admin/EquipmentToAddEquipment.vue'
-import EquipmentToUpdateEquipment from '../pages/admin/EquipmentToUpdateEquipment.vue'
-import UserToUserInfo from '../pages/user/UserToUserInfo.vue'
-import UserToUpdateInfo from '../pages/user/UserToUpdateInfo.vue'
-import UserToUserClass from '../pages/user/UserToUserClass.vue'
-import UserToApplyClass from '../pages/user/UserToApplyClass.vue'
+import ClassList from '../pages/admin/ClassList.vue'
+import ClassAdd from '../pages/admin/ClassAdd.vue'
+import ClassOrderList from '../pages/admin/ClassOrderList.vue'
+import MemberList from '../pages/admin/MemberList.vue'
+import MemberAdd from '../pages/admin/MemberAdd.vue'
+import MemberEdit from '../pages/admin/MemberEdit.vue'
+import MemberSearch from '../pages/admin/MemberSearch.vue'
+import EmployeeList from '../pages/admin/EmployeeList.vue'
+import EmployeeAdd from '../pages/admin/EmployeeAdd.vue'
+import EmployeeEdit from '../pages/admin/EmployeeEdit.vue'
+import EquipmentList from '../pages/admin/EquipmentList.vue'
+import EquipmentAdd from '../pages/admin/EquipmentAdd.vue'
+import EquipmentEdit from '../pages/admin/EquipmentEdit.vue'
+import UserInfo from '../pages/user/UserInfo.vue'
+import UserEditInfo from '../pages/user/UserEditInfo.vue'
+import UserClassList from '../pages/user/UserClassList.vue'
+import UserApplyClass from '../pages/user/UserApplyClass.vue'
 import UserChat from '../pages/user/UserChat.vue'
 import UserRegister from '../pages/user/UserRegister.vue'
-import UserToApplyCard from '../pages/user/UserToApplyCard.vue'
-import MemberCardApplications from '../pages/admin/MemberCardApplications.vue'
+import UserApplyCard from '../pages/user/UserApplyCard.vue'
+import CardApplicationList from '../pages/admin/CardApplicationList.vue'
 import api from '../api/client'
 
 const routes = [
   { path: '/', component: UserLogin },
   { path: '/admin', component: AdminLogin },
-  { path: '/toUserRegister', component: UserRegister },
+  { path: '/register', component: UserRegister },
 
-  { path: '/toAdminMain', component: AdminMain, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/toUserMain', component: UserMain, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/admin/dashboard', component: AdminMain, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/user/home', component: UserMain, meta: { requiresAuth: true, role: 'user' } },
 
-  // 管理端（先占位，后续把 templates 全量迁移为 Vue 页面组件）
-  { path: '/member/selMember', component: MemberSelMember, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/member/toAddMember', component: MemberToAddMember, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/member/toUpdateMember', component: MemberToUpdateMember, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/member/toSelByCard', component: MemberToSelByCard, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/member/cardApplications', component: MemberCardApplications, meta: { requiresAuth: true, role: 'admin' } },
+  // 管理端
+  { path: '/member/list', component: MemberList, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/member/add', component: MemberAdd, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/member/edit', component: MemberEdit, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/member/search', component: MemberSearch, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/member/card-applications', component: CardApplicationList, meta: { requiresAuth: true, role: 'admin' } },
 
-  { path: '/employee/selEmployee', component: EmployeeSelEmployee, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/employee/toAddEmployee', component: EmployeeToAddEmployee, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/employee/toUpdateEmployee', component: EmployeeToUpdateEmployee, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/employee/list', component: EmployeeList, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/employee/add', component: EmployeeAdd, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/employee/edit', component: EmployeeEdit, meta: { requiresAuth: true, role: 'admin' } },
 
-  { path: '/equipment/selEquipment', component: EquipmentSelEquipment, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/equipment/toAddEquipment', component: EquipmentToAddEquipment, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/equipment/toUpdateEquipment', component: EquipmentToUpdateEquipment, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/equipment/list', component: EquipmentList, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/equipment/add', component: EquipmentAdd, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/equipment/edit', component: EquipmentEdit, meta: { requiresAuth: true, role: 'admin' } },
 
-  { path: '/class/selClass', component: ClassSelClass, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/class/toAddClass', component: ClassToAddClass, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/class/selClassOrder', component: ClassSelClassOrder, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/class/list', component: ClassList, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/class/add', component: ClassAdd, meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/class/orders', component: ClassOrderList, meta: { requiresAuth: true, role: 'admin' } },
 
   // 用户端
-  { path: '/user/toUserInfo', component: UserToUserInfo, meta: { requiresAuth: true, role: 'user' } },
-  { path: '/user/toUpdateInfo', component: UserToUpdateInfo, meta: { requiresAuth: true, role: 'user' } },
-  { path: '/user/toUserClass', component: UserToUserClass, meta: { requiresAuth: true, role: 'user' } },
-  { path: '/user/toApplyClass', component: UserToApplyClass, meta: { requiresAuth: true, role: 'user' } },
-  { path: '/user/toChat', component: UserChat, meta: { requiresAuth: true, role: 'user' } },
-  { path: '/user/toApplyCard', component: UserToApplyCard, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/info', component: UserInfo, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/edit-info', component: UserEditInfo, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/classes', component: UserClassList, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/apply-class', component: UserApplyClass, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/chat', component: UserChat, meta: { requiresAuth: true, role: 'user' } },
+  { path: '/user/apply-card', component: UserApplyCard, meta: { requiresAuth: true, role: 'user' } },
 
   // fallback
   { path: '/:pathMatch(.*)*', component: NotImplemented }
@@ -90,4 +90,3 @@ router.beforeEach(async (to) => {
 })
 
 export default router
-

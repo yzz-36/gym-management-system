@@ -58,7 +58,7 @@ async function submit() {
       adminPassword: form.adminPassword
     })
     if (resp.data && resp.data.success) {
-      router.push('/toAdminMain')
+      router.push('/admin/dashboard')
     } else {
       msg.value = resp.data?.message || '登录失败'
     }

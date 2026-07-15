@@ -16,9 +16,9 @@ const showLayout = computed(() => {
   const p = route.path
 
   // 登录入口/登录页不展示侧边栏
-  if (p === '/' || p === '/admin' || p === '/toAdminMain' || p === '/toUserMain') {
+  if (p === '/' || p === '/admin' || p === '/register' || p === '/admin/dashboard' || p === '/user/home') {
     // 其中到主页面需要展示侧边栏
-    return p === '/toAdminMain' || p === '/toUserMain'
+    return p === '/admin/dashboard' || p === '/user/home'
   }
 
   // 主业务区：管理员
@@ -36,6 +36,6 @@ const showLayout = computed(() => {
 
 const layoutRole = computed(() => {
   const p = route.path
-  return p === '/toUserMain' || p.startsWith('/user') ? 'user' : 'admin'
+  return p === '/user/home' || p.startsWith('/user') ? 'user' : 'admin'
 })
 </script>

@@ -1,0 +1,13 @@
+package com.gym.mapper;
+
+import com.gym.entity.Admin;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface AdminMapper {
+
+    Admin selectByAccountAndPassword(Admin admin);
+
+    Admin selectByAccount(Integer adminAccount);
+
+}

@@ -2,11 +2,18 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-GymManagementSystemApplication<gym-management-system>",
+            "name": "GymManagementSystemApplication",
+            "request": "launch",
+            "mainClass": "com.gym.GymManagementSystemApplication",
+            "projectName": "gym-management-backend"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-GymManagementSystemApplication<backend>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "mainClass": "com.gym.GymManagementSystemApplication",
-            "projectName": "gym-management-system",
+            "projectName": "backend",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }

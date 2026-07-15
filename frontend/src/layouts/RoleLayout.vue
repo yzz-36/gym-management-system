@@ -15,46 +15,46 @@
         active-text-color="#ffffff"
       >
         <template v-if="role === 'admin'">
-          <el-menu-item index="/toAdminMain">
+          <el-menu-item index="/admin/dashboard">
             <el-icon><HomeFilled /></el-icon>
             <span>管理员主页</span>
           </el-menu-item>
-          <el-menu-item index="/member/selMember">
+          <el-menu-item index="/member/list">
             <el-icon><UserFilled /></el-icon>
             <span>用户管理</span>
           </el-menu-item>
-          <el-menu-item index="/member/cardApplications">
+          <el-menu-item index="/member/card-applications">
             <el-icon><CreditCard /></el-icon>
             <span>办卡申请</span>
           </el-menu-item>
-          <el-menu-item index="/employee/selEmployee">
+          <el-menu-item index="/employee/list">
             <el-icon><Avatar /></el-icon>
             <span>员工管理</span>
           </el-menu-item>
-          <el-menu-item index="/equipment/selEquipment">
+          <el-menu-item index="/equipment/list">
             <el-icon><Basketball /></el-icon>
             <span>器材管理</span>
           </el-menu-item>
-          <el-menu-item index="/class/selClass">
+          <el-menu-item index="/class/list">
             <el-icon><Calendar /></el-icon>
             <span>课程管理</span>
           </el-menu-item>
         </template>
 
         <template v-else>
-          <el-menu-item index="/toUserMain">
+          <el-menu-item index="/user/home">
             <el-icon><HomeFilled /></el-icon>
             <span>用户主页</span>
           </el-menu-item>
-          <el-menu-item index="/user/toUserInfo">
+          <el-menu-item index="/user/info">
             <el-icon><User /></el-icon>
             <span>个人信息</span>
           </el-menu-item>
-          <el-menu-item index="/user/toChat">
+          <el-menu-item index="/user/chat">
             <el-icon><ChatDotRound /></el-icon>
             <span>聊天</span>
           </el-menu-item>
-          <el-menu-item index="/user/toApplyCard">
+          <el-menu-item index="/user/apply-card">
             <el-icon><CreditCard /></el-icon>
             <span>申请办卡</span>
           </el-menu-item>
@@ -63,8 +63,8 @@
               <el-icon><Calendar /></el-icon>
               <span>课程管理</span>
             </template>
-            <el-menu-item index="/user/toApplyClass">报名选课</el-menu-item>
-            <el-menu-item index="/user/toUserClass">我的课程</el-menu-item>
+            <el-menu-item index="/user/apply-class">报名选课</el-menu-item>
+            <el-menu-item index="/user/classes">我的课程</el-menu-item>
           </el-sub-menu>
         </template>
       </el-menu>
