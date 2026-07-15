@@ -135,7 +135,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { SwitchButton } from '@element-plus/icons-vue'
 
@@ -155,6 +155,7 @@ const totals = reactive({
 })
 const recentMembers = ref([])
 const recentClasses = ref([])
+let refreshTimer = null
 
 async function load() {
   loading.value = true
@@ -181,8 +182,26 @@ async function logout() {
   router.push('/')
 }
 
+function startAutoRefresh() {
+  refreshTimer = setInterval(() => {
+    load().catch(() => {})
+  }, 10000)
+}
+
+function stopAutoRefresh() {
+  if (refreshTimer) {
+    clearInterval(refreshTimer)
+    refreshTimer = null
+  }
+}
+
 onMounted(() => {
   load().catch(() => {})
+  startAutoRefresh()
+})
+
+onUnmounted(() => {
+  stopAutoRefresh()
 })
 </script>
 
@@ -211,36 +230,24 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 16px;
-  color: #fff;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-  transition: transform 0.2s;
+  background: #fff;
+  border: 1px solid #e4e7ed;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 .stat-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 }
-.stat-blue {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-.stat-green {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-}
-.stat-purple {
-  background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
-}
-.stat-orange {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-.stat-cyan {
-  background: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%);
-}
-.stat-success {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-.stat-warning {
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-}
+.stat-blue,
+.stat-green,
+.stat-purple,
+.stat-orange,
+.stat-cyan,
+.stat-success,
+.stat-warning,
 .stat-danger {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border-top: 4px solid #e4e7ed;
 }
 .stat-icon {
   font-size: 36px;
@@ -249,7 +256,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.2);
+  background: #f5f7fa;
   border-radius: 14px;
 }
 .stat-info {
@@ -257,12 +264,13 @@ onMounted(() => {
 }
 .stat-label {
   font-size: 14px;
-  opacity: 0.9;
+  color: #606266;
   margin-bottom: 4px;
 }
 .stat-value {
   font-size: 32px;
   font-weight: 700;
+  color: #1a1a2e;
 }
 .panel {
   background: #fff;

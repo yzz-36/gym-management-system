@@ -129,9 +129,17 @@ public class ApiLoginController {
 
     @GetMapping("/toUserMain")
     public ResponseEntity<Map<String, Object>> toUserMain(HttpSession session) {
+        Member member = (Member) session.getAttribute(SESSION_USER);
+        if (member != null) {
+            List<Member> latest = memberService.selectByMemberAccount(member.getMemberAccount());
+            if (latest != null && !latest.isEmpty()) {
+                member = latest.get(0);
+                session.setAttribute(SESSION_USER, member);
+            }
+        }
         Map<String, Object> body = new HashMap<>();
         body.put("success", true);
-        body.put("member", session.getAttribute(SESSION_USER));
+        body.put("member", member);
         return ResponseEntity.ok(body);
     }
 
