@@ -71,8 +71,8 @@ async function loadApplications() {
 
 async function submit() {
   msg.value = ''
-  if (!phone.value || phone.value.trim().length < 5) {
-    msg.value = '请输入有效的联系电话'
+  if (!phone.value || !/^\d{11}$/.test(phone.value.trim())) {
+    msg.value = '请输入11位数字的电话号码'
     return
   }
   try {

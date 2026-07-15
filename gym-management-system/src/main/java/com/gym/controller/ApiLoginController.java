@@ -3,13 +3,11 @@ package com.gym.controller;
 import com.gym.pojo.Admin;
 import com.gym.pojo.CardApplication;
 import com.gym.pojo.ClassOrder;
-import com.gym.pojo.ClassTable;
 import com.gym.pojo.Equipment;
 import com.gym.pojo.Member;
 import com.gym.service.AdminService;
 import com.gym.service.CardApplicationService;
 import com.gym.service.ClassOrderService;
-import com.gym.service.ClassTableService;
 import com.gym.service.EmployeeService;
 import com.gym.service.EquipmentService;
 import com.gym.service.MemberService;
@@ -40,7 +38,6 @@ public class ApiLoginController {
     private final EquipmentService equipmentService;
     private final CardApplicationService cardApplicationService;
     private final ClassOrderService classOrderService;
-    private final ClassTableService classTableService;
 
     public ApiLoginController(
             MemberService memberService,
@@ -48,15 +45,13 @@ public class ApiLoginController {
             EmployeeService employeeService,
             EquipmentService equipmentService,
             CardApplicationService cardApplicationService,
-            ClassOrderService classOrderService,
-            ClassTableService classTableService) {
+            ClassOrderService classOrderService) {
         this.memberService = memberService;
         this.adminService = adminService;
         this.employeeService = employeeService;
         this.equipmentService = equipmentService;
         this.cardApplicationService = cardApplicationService;
         this.classOrderService = classOrderService;
-        this.classTableService = classTableService;
     }
 
     @PostMapping("/adminLogin")
@@ -149,10 +144,9 @@ public class ApiLoginController {
         List<ClassOrder> allOrders = classOrderService.findAll();
         body.put("classOrderTotal", allOrders.size());
 
-        List<ClassTable> allClasses = classTableService.findAll();
-        List<ClassTable> recentClasses = new ArrayList<>();
-        for (int i = Math.max(0, allClasses.size() - 5); i < allClasses.size(); i++) {
-            recentClasses.add(allClasses.get(i));
+        List<ClassOrder> recentClasses = new ArrayList<>();
+        for (int i = Math.max(0, allOrders.size() - 5); i < allOrders.size(); i++) {
+            recentClasses.add(allOrders.get(i));
         }
         body.put("recentClasses", recentClasses);
 

@@ -120,9 +120,9 @@
           <div class="panel-body">
             <el-table :data="recentClasses" border stripe style="width: 100%" v-loading="loading">
               <el-table-column prop="className" label="课程名称" width="120" />
-              <el-table-column prop="classBegin" label="开课日期" width="130" />
-              <el-table-column prop="classTime" label="上课时间" width="100" />
+              <el-table-column prop="classBegin" label="开课日期" width="140" />
               <el-table-column prop="coach" label="教练" width="100" />
+              <el-table-column prop="memberName" label="选课人" width="100" />
             </el-table>
             <div v-if="recentClasses.length === 0" class="empty-tip">
               <el-empty description="暂无课程信息" />

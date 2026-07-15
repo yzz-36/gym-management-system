@@ -289,6 +289,11 @@ public class ApiUserController {
             resp.put("message", "联系电话不能为空");
             return ResponseEntity.ok(resp);
         }
+        if (!memberPhone.trim().matches("\\d{11}")) {
+            resp.put("success", false);
+            resp.put("message", "请输入11位数字的电话号码");
+            return ResponseEntity.ok(resp);
+        }
 
         if ("member".equals(member.getMemberType())) {
             resp.put("success", false);

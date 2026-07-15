@@ -56,8 +56,7 @@ async function load() {
 }
 
 function validatePhone(phone) {
-  // 与原 Thymeleaf 的正则一致
-  const reg = /^[1][3,4,5,7,8,9][0-9]{9}$/
+  const reg = /^\d{11}$/
   return reg.test(String(phone || ''))
 }
 
