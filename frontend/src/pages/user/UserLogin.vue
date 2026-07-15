@@ -59,6 +59,7 @@ async function submit() {
       memberPassword: form.memberPassword
     })
     if (resp.data && resp.data.success) {
+      sessionStorage.setItem('gym_user_account', form.memberAccount)
       router.push('/toUserMain')
     } else {
       msg.value = resp.data?.message || '登录失败'

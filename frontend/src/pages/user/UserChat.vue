@@ -48,7 +48,10 @@ type ChatMessage = {
   createdAt: number
 }
 
-const CHAT_STORAGE_KEY = 'gym_chat_messages'
+function getStorageKey(): string {
+  const account = sessionStorage.getItem('gym_user_account') || 'guest'
+  return `gym_chat_messages_${account}`
+}
 
 const draft = ref('')
 const isSending = ref(false)
@@ -63,7 +66,7 @@ const welcomeMessage: ChatMessage = {
 
 function loadMessages(): ChatMessage[] {
   try {
-    const saved = sessionStorage.getItem(CHAT_STORAGE_KEY)
+    const saved = sessionStorage.getItem(getStorageKey())
     if (saved) {
       const parsed = JSON.parse(saved) as ChatMessage[]
       if (Array.isArray(parsed) && parsed.length > 0) return parsed
@@ -73,16 +76,20 @@ function loadMessages(): ChatMessage[] {
 }
 
 function saveMessages() {
-  sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages.value))
+  sessionStorage.setItem(getStorageKey(), JSON.stringify(messages.value))
 }
 
 const messages = ref<ChatMessage[]>(loadMessages())
 
 function pushMessage(role: ChatRole, text: string) {
+  let cleanText = text
+  if (role === 'assistant') {
+    cleanText = text.replace(/\*\*/g, '').replace(/#+/g, '')
+  }
   messages.value.push({
     id: crypto.randomUUID(),
     role,
-    text,
+    text: cleanText,
     createdAt: Date.now()
   })
   saveMessages()
