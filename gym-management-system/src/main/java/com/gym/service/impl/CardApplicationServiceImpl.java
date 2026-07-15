@@ -20,6 +20,11 @@ public class CardApplicationServiceImpl implements CardApplicationService {
     }
 
     @Override
+    public CardApplication findById(Integer id) {
+        return cardApplicationMapper.findById(id);
+    }
+
+    @Override
     public Boolean insert(CardApplication application) {
         return cardApplicationMapper.insert(application);
     }
@@ -32,5 +37,10 @@ public class CardApplicationServiceImpl implements CardApplicationService {
     @Override
     public List<CardApplication> findByMemberAccount(Integer memberAccount) {
         return cardApplicationMapper.findByMemberAccount(memberAccount);
+    }
+
+    @Override
+    public Boolean deleteByMemberAccount(Integer memberAccount) {
+        return cardApplicationMapper.deleteByMemberAccount(memberAccount);
     }
 }

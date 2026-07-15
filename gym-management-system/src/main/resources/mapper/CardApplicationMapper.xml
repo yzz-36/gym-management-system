@@ -10,6 +10,12 @@
         ORDER BY id DESC
     </select>
 
+    <select id="findById" resultType="cardApplication" parameterType="java.lang.Integer">
+        SELECT *
+        FROM card_application
+        WHERE id = #{id}
+    </select>
+
     <select id="findByMemberAccount" resultType="cardApplication" parameterType="int">
         SELECT *
         FROM card_application
@@ -18,8 +24,8 @@
     </select>
 
     <insert id="insert" parameterType="cardApplication">
-        INSERT INTO card_application (member_account, member_name, member_phone, apply_time, status, remark)
-        VALUES (#{memberAccount}, #{memberName}, #{memberPhone}, #{applyTime}, #{status}, #{remark})
+        INSERT INTO card_application (member_account, member_name, member_phone, apply_time, status, remark, type)
+        VALUES (#{memberAccount}, #{memberName}, #{memberPhone}, #{applyTime}, #{status}, #{remark}, #{type})
     </insert>
 
     <update id="updateStatus" parameterType="cardApplication">
@@ -28,5 +34,11 @@
             remark = #{remark}
         WHERE id = #{id}
     </update>
+
+    <delete id="deleteByMemberAccount" parameterType="java.lang.Integer">
+        DELETE
+        FROM card_application
+        WHERE member_account = #{memberAccount}
+    </delete>
 
 </mapper>

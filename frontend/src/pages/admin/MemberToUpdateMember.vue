@@ -51,6 +51,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import api, { postForm } from '../../api/client'
 
 const route = useRoute()
@@ -68,8 +69,13 @@ async function load() {
 
 async function submit() {
   if (!member.value) return
-  await postForm('/api/member/updateMember', member.value)
-  router.push('/member/selMember')
+  const resp = await postForm('/api/member/updateMember', member.value)
+  if (resp.data?.success) {
+    ElMessage.success('修改成功')
+    router.push('/member/selMember')
+  } else {
+    ElMessage.error(resp.data?.message || '修改失败')
+  }
 }
 
 onMounted(() => {

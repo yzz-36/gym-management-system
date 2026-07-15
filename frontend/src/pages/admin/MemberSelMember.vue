@@ -47,6 +47,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import api, { postForm } from '../../api/client'
 
 const router = useRouter()
@@ -62,14 +63,36 @@ function edit(memberAccount) {
 }
 
 async function cancelMember(member) {
-  if (!confirm(`确定要取消 ${member.memberName} 的会员资格吗？`)) return
-  await postForm('/api/member/cancelMember', { memberAccount: member.memberAccount })
-  await load()
+  try {
+    const { value: remark } = await ElMessageBox.prompt('请输入退卡原因（可选）', `取消会员 - ${member.memberName}`, {
+      confirmButtonText: '确认取消',
+      cancelButtonText: '取消操作',
+      inputPlaceholder: '请输入退卡原因',
+      inputValidator: () => true
+    })
+    const resp = await postForm('/api/member/cancelMember', {
+      memberAccount: member.memberAccount,
+      remark: remark || ''
+    })
+    if (resp.data?.success) {
+      ElMessage.success('取消会员成功，已记录退卡信息')
+    } else {
+      ElMessage.error(resp.data?.message || '取消会员失败')
+    }
+    await load()
+  } catch (e) {
+    // 用户取消了操作
+  }
 }
 
 async function del(memberAccount) {
-  if (!confirm('确定要删除吗？')) return
-  await postForm('/api/member/delMember', { memberAccount })
+  if (!confirm('确定要删除吗？删除后数据无法恢复！')) return
+  const resp = await postForm('/api/member/delMember', { memberAccount })
+  if (resp.data?.success) {
+    ElMessage.success('删除成功')
+  } else {
+    ElMessage.error(resp.data?.message || '删除失败')
+  }
   await load()
 }
 

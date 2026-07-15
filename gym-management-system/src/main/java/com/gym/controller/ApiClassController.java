@@ -2,8 +2,10 @@ package com.gym.controller;
 
 import com.gym.pojo.ClassOrder;
 import com.gym.pojo.ClassTable;
+import com.gym.pojo.Member;
 import com.gym.service.ClassOrderService;
 import com.gym.service.ClassTableService;
+import com.gym.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/class")
@@ -23,6 +28,8 @@ public class ApiClassController {
     private ClassTableService classTableService;
     @Autowired
     private ClassOrderService classOrderService;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/selClass")
     public Map<String, Object> selectClass() {
@@ -35,6 +42,7 @@ public class ApiClassController {
 
     @GetMapping("/selClassOrder")
     public Map<String, Object> selectClassOrder(Integer classId) {
+        cleanInvalidOrders();
         List<ClassOrder> classOrderList = classOrderService.selectMemberOrderList(classId);
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", true);
@@ -100,6 +108,29 @@ public class ApiClassController {
             resp.put("message", "删除失败，课程不存在");
         }
         return ResponseEntity.ok(resp);
+    }
+
+    private void cleanInvalidOrders() {
+        List<ClassOrder> allOrders = classOrderService.findAll();
+        if (allOrders == null || allOrders.isEmpty()) {
+            return;
+        }
+
+        List<Member> members = memberService.findAll();
+        Set<Integer> validMemberAccounts = new HashSet<>();
+        if (members != null) {
+            for (Member m : members) {
+                if (m.getMemberAccount() != null) {
+                    validMemberAccounts.add(m.getMemberAccount());
+                }
+            }
+        }
+
+        for (ClassOrder order : allOrders) {
+            if (order.getMemberAccount() == null || !validMemberAccounts.contains(order.getMemberAccount())) {
+                classOrderService.deleteByClassOrderId(order.getClassOrderId());
+            }
+        }
     }
 }
 

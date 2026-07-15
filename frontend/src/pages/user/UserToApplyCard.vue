@@ -38,6 +38,7 @@
           <template #default="scope">
             <el-tag v-if="scope.row.status === 'pending'" type="warning">待处理</el-tag>
             <el-tag v-else-if="scope.row.status === 'approved'" type="success">已通过</el-tag>
+            <el-tag v-else-if="scope.row.status === 'processed'" type="primary">已办卡</el-tag>
             <el-tag v-else type="danger">已拒绝</el-tag>
           </template>
         </el-table-column>

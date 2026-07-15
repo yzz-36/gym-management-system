@@ -50,4 +50,9 @@ public class ClassOrderServiceImpl implements ClassOrderService {
     public ClassOrder selectByClassOrderId(Integer classOrderId) {
         return classOrderMapper.selectByClassOrderId(classOrderId);
     }
+
+    @Override
+    public Boolean deleteByMemberAccount(Integer memberAccount) {
+        return classOrderMapper.deleteByMemberAccount(memberAccount);
+    }
 }

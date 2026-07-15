@@ -45,4 +45,10 @@
         WHERE class_order_id = #{classOrderId}
     </select>
 
+    <delete id="deleteByMemberAccount" parameterType="java.lang.Integer">
+        DELETE
+        FROM class_order
+        WHERE member_account = #{memberAccount}
+    </delete>
+
 </mapper>

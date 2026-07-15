@@ -281,6 +281,18 @@ public class ApiUserController {
                     resp.put("message", "您已提交过申请，请等待管理员处理");
                     return ResponseEntity.ok(resp);
                 }
+                if ("approved".equals(app.getStatus())) {
+                    resp.put("success", false);
+                    resp.put("message", "您的申请已通过，请等待管理员办理会员卡");
+                    return ResponseEntity.ok(resp);
+                }
+                if ("processed".equals(app.getStatus()) && "cancel".equals(app.getType())) {
+                    // 已退卡记录不影响
+                } else if ("processed".equals(app.getStatus())) {
+                    resp.put("success", false);
+                    resp.put("message", "您已是会员，无需重复申请");
+                    return ResponseEntity.ok(resp);
+                }
             }
         }
 

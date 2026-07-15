@@ -3,6 +3,7 @@ package com.gym.controller;
 import com.gym.pojo.CardApplication;
 import com.gym.pojo.Member;
 import com.gym.service.CardApplicationService;
+import com.gym.service.ClassOrderService;
 import com.gym.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ public class ApiMemberController {
     private MemberService memberService;
     @Autowired
     private CardApplicationService cardApplicationService;
+    @Autowired
+    private ClassOrderService classOrderService;
 
     @GetMapping("/selMember")
     public Map<String, Object> selectMember() {
@@ -102,6 +105,9 @@ public class ApiMemberController {
             return ResponseEntity.ok(resp);
         }
 
+        classOrderService.deleteByMemberAccount(memberAccount);
+        cardApplicationService.deleteByMemberAccount(memberAccount);
+
         Boolean result = memberService.deleteByMemberAccount(memberAccount);
 
         Map<String, Object> resp = new HashMap<>();
@@ -176,7 +182,7 @@ public class ApiMemberController {
     }
 
     @PostMapping("/handleCardApplication")
-    public ResponseEntity<Map<String, Object>> handleCardApplication(Integer id, String status, String remark, Integer cardClass, String cardExpireTime) {
+    public ResponseEntity<Map<String, Object>> handleCardApplication(Integer id, String status, String remark) {
         if (id == null || status == null || status.trim().isEmpty()) {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
@@ -191,32 +197,6 @@ public class ApiMemberController {
 
         Boolean result = cardApplicationService.updateStatus(application);
 
-        if (result != null && result && "approved".equals(status) && cardClass != null && cardClass > 0) {
-            List<CardApplication> allApps = cardApplicationService.findAll();
-            Integer memberAccount = null;
-            for (CardApplication app : allApps) {
-                if (app.getId().equals(id)) {
-                    memberAccount = app.getMemberAccount();
-                    break;
-                }
-            }
-            if (memberAccount != null) {
-                List<Member> members = memberService.selectByMemberAccount(memberAccount);
-                if (members != null && !members.isEmpty()) {
-                    Member member = members.get(0);
-                    Date date = new Date();
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    String nowDay = sdf.format(date);
-                    member.setCardTime(nowDay);
-                    member.setCardExpireTime(cardExpireTime);
-                    member.setCardClass(cardClass);
-                    member.setCardNextClass(cardClass);
-                    member.setMemberType("member");
-                    memberService.updateMemberByMemberAccount(member);
-                }
-            }
-        }
-
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", result != null && result);
         if (!(result != null && result)) {
@@ -225,8 +205,74 @@ public class ApiMemberController {
         return ResponseEntity.ok(resp);
     }
 
+    @PostMapping("/processCard")
+    public ResponseEntity<Map<String, Object>> processCard(Integer id, Integer cardClass, String cardExpireTime) {
+        if (id == null || cardClass == null || cardClass <= 0 || cardExpireTime == null || cardExpireTime.trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课时数量和到期时间不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        CardApplication app = cardApplicationService.findById(id);
+        if (app == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "申请记录不存在");
+            return ResponseEntity.ok(resp);
+        }
+        if (!"approved".equals(app.getStatus())) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "该申请尚未通过审核");
+            return ResponseEntity.ok(resp);
+        }
+
+        Integer memberAccount = app.getMemberAccount();
+        if (memberAccount == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "申请记录缺少用户账号");
+            return ResponseEntity.ok(resp);
+        }
+
+        List<Member> members = memberService.selectByMemberAccount(memberAccount);
+        if (members == null || members.isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "用户不存在");
+            return ResponseEntity.ok(resp);
+        }
+
+        Member member = members.get(0);
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowDay = sdf.format(date);
+        member.setCardTime(nowDay);
+        member.setCardExpireTime(cardExpireTime);
+        member.setCardClass(cardClass);
+        member.setCardNextClass(cardClass);
+        member.setMemberType("member");
+        Boolean result = memberService.updateMemberByMemberAccount(member);
+
+        if (result != null && result) {
+            CardApplication updateApp = new CardApplication();
+            updateApp.setId(id);
+            updateApp.setStatus("processed");
+            updateApp.setRemark("已办理会员卡，课时：" + cardClass + "，到期：" + cardExpireTime);
+            cardApplicationService.updateStatus(updateApp);
+        }
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "办理失败");
+        }
+        return ResponseEntity.ok(resp);
+    }
+
     @PostMapping("/cancelMember")
-    public ResponseEntity<Map<String, Object>> cancelMember(Integer memberAccount) {
+    public ResponseEntity<Map<String, Object>> cancelMember(Integer memberAccount, String remark) {
         if (memberAccount == null) {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
@@ -243,12 +289,35 @@ public class ApiMemberController {
         }
 
         Member member = members.get(0);
+        if (!"member".equals(member.getMemberType())) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "该用户不是会员");
+            return ResponseEntity.ok(resp);
+        }
+
         member.setMemberType("visitor");
         member.setCardTime(null);
         member.setCardExpireTime(null);
         member.setCardClass(null);
         member.setCardNextClass(null);
         Boolean result = memberService.updateMemberByMemberAccount(member);
+
+        if (result != null && result) {
+            CardApplication cancelRecord = new CardApplication();
+            cancelRecord.setMemberAccount(member.getMemberAccount());
+            cancelRecord.setMemberName(member.getMemberName());
+            cancelRecord.setMemberPhone(member.getMemberPhone() != null ? String.valueOf(member.getMemberPhone()) : "");
+            Date date = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            cancelRecord.setApplyTime(sdf.format(date));
+            cancelRecord.setStatus("cancelled");
+            cancelRecord.setRemark(remark != null && !remark.trim().isEmpty() ? remark : "管理员取消会员资格");
+            cancelRecord.setType("cancel");
+            cardApplicationService.insert(cancelRecord);
+
+            classOrderService.deleteByMemberAccount(memberAccount);
+        }
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("success", result != null && result);

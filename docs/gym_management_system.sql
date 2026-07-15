@@ -93,6 +93,7 @@ CREATE TABLE `member`  (
   `member_weight` int NULL DEFAULT NULL COMMENT '会员体重',
   `member_phone` bigint NULL DEFAULT NULL COMMENT '会员电话',
   `card_time` date NULL DEFAULT NULL COMMENT '办卡时间',
+  `card_expire_time` date NULL DEFAULT NULL COMMENT '到期时间',
   `card_class` int NULL DEFAULT NULL COMMENT '购买课时',
   `card_next_class` int NULL DEFAULT NULL COMMENT '剩余课时',
   `member_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'member' COMMENT '用户类型：member=会员, visitor=非会员',
@@ -103,19 +104,19 @@ CREATE TABLE `member`  (
 -- Records of member
 -- ----------------------------
 -- 5个会员（有卡号、课时）
-INSERT INTO `member` VALUES (202009867, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '张三', '女', 24, 182, 60, 13515548482, '2025-06-05', 40, 40, 'member');
-INSERT INTO `member` VALUES (202100788, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '李四', '男', 31, 178, 60, 13131554873, '2026-01-01', 50, 50, 'member');
-INSERT INTO `member` VALUES (202132539, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '王五', '男', 31, 178, 60, 13154875489, '2026-01-01', 40, 40, 'member');
-INSERT INTO `member` VALUES (202186416, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '马六', '女', 23, 160, 45, 13124576857, '2026-01-16', 30, 30, 'member');
-INSERT INTO `member` VALUES (202106725, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tom', '男', 24, 178, 88, 13758784959, '2026-02-26', 30, 30, 'member');
+INSERT INTO `member` VALUES (202009867, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '张三', '女', 24, 182, 60, 13515548482, '2025-06-05', '2026-06-05', 40, 40, 'member');
+INSERT INTO `member` VALUES (202100788, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '李四', '男', 31, 178, 60, 13131554873, '2026-01-01', '2027-01-01', 50, 50, 'member');
+INSERT INTO `member` VALUES (202132539, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '王五', '男', 31, 178, 60, 13154875489, '2026-01-01', '2027-01-01', 40, 40, 'member');
+INSERT INTO `member` VALUES (202186416, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', '马六', '女', 23, 160, 45, 13124576857, '2026-01-16', '2027-01-16', 30, 30, 'member');
+INSERT INTO `member` VALUES (202106725, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tom', '男', 24, 178, 88, 13758784959, '2026-02-26', '2027-02-26', 30, 30, 'member');
 -- 7个非会员（自己注册，无卡号课时）
-INSERT INTO `member` VALUES (202183406, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tylor', '女', 19, 170, 60, 13786457488, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202176587, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Jack', '男', 33, 177, 90, 13767546666, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202156754, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Mike', '男', 36, 166, 67, 13786532448, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202153468, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Emma', '女', 25, 173, 44, 13786457124, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202121345, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Ava', '女', 28, 160, 40, 13754457488, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202189776, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Chloe', '女', 27, 170, 50, 13986337489, NULL, NULL, NULL, 'visitor');
-INSERT INTO `member` VALUES (202123664, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Lily', '女', 25, 165, 51, 15986457423, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202183406, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Tylor', '女', 19, 170, 60, 13786457488, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202176587, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Jack', '男', 33, 177, 90, 13767546666, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202156754, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Mike', '男', 36, 166, 67, 13786532448, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202153468, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Emma', '女', 25, 173, 44, 13786457124, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202121345, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Ava', '女', 28, 160, 40, 13754457488, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202189776, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Chloe', '女', 27, 170, 50, 13986337489, NULL, NULL, NULL, NULL, 'visitor');
+INSERT INTO `member` VALUES (202123664, '$2a$10$NLmkV7kUzJp3fgUFrWwo0eiEUVsBJ3I2WoJQhPjQo9lFd2aPTpRRa', 'Lily', '女', 25, 165, 51, 15986457423, NULL, NULL, NULL, NULL, 'visitor');
 
 -- ----------------------------
 -- Table structure for employee
@@ -178,8 +179,9 @@ CREATE TABLE `card_application` (
   `member_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '申请人姓名',
   `member_phone` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `apply_time` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '申请时间',
-  `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'pending' COMMENT '状态：pending=待处理, approved=已通过, rejected=已拒绝',
+  `status` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'pending' COMMENT '状态：pending=待处理, approved=已通过, rejected=已拒绝, cancelled=已退卡',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
+  `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'apply' COMMENT '类型：apply=办卡申请, cancel=退卡',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
