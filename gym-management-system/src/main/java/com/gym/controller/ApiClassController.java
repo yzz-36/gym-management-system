@@ -120,7 +120,7 @@ public class ApiClassController {
         Set<Integer> validMemberAccounts = new HashSet<>();
         if (members != null) {
             for (Member m : members) {
-                if (m.getMemberAccount() != null) {
+                if (m.getMemberAccount() != null && "member".equals(m.getMemberType())) {
                     validMemberAccounts.add(m.getMemberAccount());
                 }
             }

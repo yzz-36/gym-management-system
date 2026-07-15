@@ -120,6 +120,22 @@ public class ApiUserController {
         return ResponseEntity.ok(resp);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<Map<String, Object>> getUserInfo(HttpSession session) {
+        Member member = (Member) session.getAttribute("user");
+        Map<String, Object> resp = new HashMap<>();
+        if (member != null) {
+            List<Member> latest = memberService.selectByMemberAccount(member.getMemberAccount());
+            if (latest != null && !latest.isEmpty()) {
+                member = latest.get(0);
+                session.setAttribute("user", member);
+            }
+        }
+        resp.put("success", true);
+        resp.put("member", member);
+        return ResponseEntity.ok(resp);
+    }
+
     @GetMapping("/toUserClass")
     public Map<String, Object> toUserClass(HttpSession session) {
         Member member = (Member) session.getAttribute("user");
@@ -261,6 +277,13 @@ public class ApiUserController {
             return ResponseEntity.ok(resp);
         }
 
+        // 申请前从数据库查最新状态，避免 session 缓存导致误判
+        List<Member> latestList = memberService.selectByMemberAccount(member.getMemberAccount());
+        if (latestList != null && !latestList.isEmpty()) {
+            member = latestList.get(0);
+            session.setAttribute("user", member);
+        }
+
         if (memberPhone == null || memberPhone.trim().isEmpty()) {
             resp.put("success", false);
             resp.put("message", "联系电话不能为空");
@@ -286,13 +309,8 @@ public class ApiUserController {
                     resp.put("message", "您的申请已通过，请等待管理员办理会员卡");
                     return ResponseEntity.ok(resp);
                 }
-                if ("processed".equals(app.getStatus()) && "cancel".equals(app.getType())) {
-                    // 已退卡记录不影响
-                } else if ("processed".equals(app.getStatus())) {
-                    resp.put("success", false);
-                    resp.put("message", "您已是会员，无需重复申请");
-                    return ResponseEntity.ok(resp);
-                }
+                // processed 状态的历史记录不再阻止申请：
+                // 若当前用户已被取消会员，应允许重新申请办卡
             }
         }
 

@@ -60,7 +60,7 @@ const msg = ref('')
 const applicationList = ref([])
 
 async function loadMember() {
-  const resp = await api.get('/api/toUserMain')
+  const resp = await api.get('/api/user/info')
   member.value = resp.data?.member || {}
 }
 
