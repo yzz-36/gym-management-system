@@ -124,17 +124,24 @@ public class ApiLoginController {
     public ResponseEntity<Map<String, Object>> toAdminMain(HttpSession session) {
         Map<String, Object> body = new HashMap<>();
         body.put("success", true);
-        body.put("memberTotal", session.getAttribute("memberTotal"));
-        body.put("employeeTotal", session.getAttribute("employeeTotal"));
-        body.put("humanTotal", session.getAttribute("humanTotal"));
-        body.put("equipmentTotal", session.getAttribute("equipmentTotal"));
+
+        // 实时统计，不依赖 session 缓存
+        List<Member> allMembers = memberService.findAll();
+        long memberTotal = allMembers.stream().filter(m -> "member".equals(m.getMemberType())).count();
+        int employeeTotal = employeeService.selectTotalCount() != null ? employeeService.selectTotalCount() : 0;
+        long humanTotal = allMembers.size() + employeeTotal;
+        int equipmentTotal = equipmentService.selectTotalCount() != null ? equipmentService.selectTotalCount() : 0;
+
+        body.put("memberTotal", memberTotal);
+        body.put("employeeTotal", employeeTotal);
+        body.put("humanTotal", humanTotal);
+        body.put("equipmentTotal", equipmentTotal);
 
         List<CardApplication> pendingApps = cardApplicationService.findAll().stream()
                 .filter(app -> "pending".equals(app.getStatus()) && !"cancel".equals(app.getType()))
                 .collect(Collectors.toList());
         body.put("pendingApplications", pendingApps);
 
-        List<Member> allMembers = memberService.findAll();
         List<Member> recentMembers = new ArrayList<>();
         for (Member m : allMembers) {
             if ("member".equals(m.getMemberType())) {
@@ -158,7 +165,7 @@ public class ApiLoginController {
 
         List<Equipment> allEquipment = equipmentService.findAll();
         long normalCount = allEquipment.stream().filter(e -> "正常".equals(e.getEquipmentStatus())).count();
-        long maintenanceCount = allEquipment.stream().filter(e -> "维护中".equals(e.getEquipmentStatus())).count();
+        long maintenanceCount = allEquipment.stream().filter(e -> "维修中".equals(e.getEquipmentStatus())).count();
         long damagedCount = allEquipment.stream().filter(e -> "损坏".equals(e.getEquipmentStatus())).count();
         body.put("equipmentNormalCount", normalCount);
         body.put("equipmentMaintenanceCount", maintenanceCount);

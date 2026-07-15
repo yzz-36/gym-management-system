@@ -78,6 +78,19 @@ public class ApiEquipmentController {
             resp.put("message", "器械名称不能为空");
             return ResponseEntity.ok(resp);
         }
+        if (equipment.getEquipmentStatus() == null || equipment.getEquipmentStatus().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器材状态不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        String status = equipment.getEquipmentStatus().trim();
+        if (!"正常".equals(status) && !"损坏".equals(status) && !"维修中".equals(status)) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器材状态只能选择：正常、损坏、维修中");
+            return ResponseEntity.ok(resp);
+        }
 
         Boolean result = equipmentService.updateEquipmentByEquipmentId(equipment);
 
@@ -101,6 +114,19 @@ public class ApiEquipmentController {
             Map<String, Object> resp = new HashMap<>();
             resp.put("success", false);
             resp.put("message", "器械位置不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (equipment.getEquipmentStatus() == null || equipment.getEquipmentStatus().trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器材状态不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        String status = equipment.getEquipmentStatus().trim();
+        if (!"正常".equals(status) && !"损坏".equals(status) && !"维修中".equals(status)) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "器材状态只能选择：正常、损坏、维修中");
             return ResponseEntity.ok(resp);
         }
 
