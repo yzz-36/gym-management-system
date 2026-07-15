@@ -66,6 +66,10 @@ public class ApiLoginController {
             return unauthorized("账号或密码有误");
         }
         putAdminMainDataInSession(session, loggedIn);
+
+        int expiredCount = checkAndExpireMembers();
+        session.setAttribute("expiredCount", expiredCount);
+
         return ResponseEntity.ok(singleSuccess());
     }
 
@@ -75,6 +79,37 @@ public class ApiLoginController {
         if (loggedIn == null) {
             return unauthorized("账号或密码有误");
         }
+
+        if ("member".equals(loggedIn.getMemberType()) && loggedIn.getCardExpireTime() != null && !loggedIn.getCardExpireTime().trim().isEmpty()) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date expireDate = sdf.parse(loggedIn.getCardExpireTime());
+                java.util.Date now = new java.util.Date();
+                if (now.after(expireDate)) {
+                    loggedIn.setMemberType("visitor");
+                    loggedIn.setCardTime(null);
+                    loggedIn.setCardExpireTime(null);
+                    loggedIn.setCardClass(null);
+                    loggedIn.setCardNextClass(null);
+                    memberService.updateMemberByMemberAccount(loggedIn);
+
+                    classOrderService.deleteByMemberAccount(loggedIn.getMemberAccount());
+
+                    CardApplication cancelRecord = new CardApplication();
+                    cancelRecord.setMemberAccount(loggedIn.getMemberAccount());
+                    cancelRecord.setMemberName(loggedIn.getMemberName());
+                    cancelRecord.setMemberPhone(loggedIn.getMemberPhone() != null ? String.valueOf(loggedIn.getMemberPhone()) : "");
+                    cancelRecord.setApplyTime(sdf.format(now) + " " + new java.text.SimpleDateFormat("HH:mm:ss").format(now));
+                    cancelRecord.setStatus("cancelled");
+                    cancelRecord.setRemark("会员卡到期自动取消");
+                    cancelRecord.setType("cancel");
+                    cardApplicationService.insert(cancelRecord);
+                }
+            } catch (Exception e) {
+                // ignore date parse errors
+            }
+        }
+
         session.setAttribute(SESSION_USER, loggedIn);
         return ResponseEntity.ok(singleSuccess());
     }
@@ -101,8 +136,13 @@ public class ApiLoginController {
 
         List<Member> allMembers = memberService.findAll();
         List<Member> recentMembers = new ArrayList<>();
-        for (int i = Math.max(0, allMembers.size() - 5); i < allMembers.size(); i++) {
-            recentMembers.add(allMembers.get(i));
+        for (Member m : allMembers) {
+            if ("member".equals(m.getMemberType())) {
+                recentMembers.add(m);
+            }
+        }
+        if (recentMembers.size() > 5) {
+            recentMembers = recentMembers.subList(recentMembers.size() - 5, recentMembers.size());
         }
         body.put("recentMembers", recentMembers);
 
@@ -167,5 +207,54 @@ public class ApiLoginController {
         m.put("success", false);
         m.put("message", message);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(m);
+    }
+
+    private int checkAndExpireMembers() {
+        List<Member> members = memberService.findAll();
+        if (members == null || members.isEmpty()) {
+            return 0;
+        }
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+        java.util.Date now = new java.util.Date();
+        int expiredCount = 0;
+
+        for (Member member : members) {
+            if (!"member".equals(member.getMemberType())) {
+                continue;
+            }
+            String expireTime = member.getCardExpireTime();
+            if (expireTime == null || expireTime.trim().isEmpty()) {
+                continue;
+            }
+            try {
+                java.util.Date expireDate = sdf.parse(expireTime);
+                if (now.after(expireDate)) {
+                    member.setMemberType("visitor");
+                    member.setCardTime(null);
+                    member.setCardExpireTime(null);
+                    member.setCardClass(null);
+                    member.setCardNextClass(null);
+                    memberService.updateMemberByMemberAccount(member);
+
+                    classOrderService.deleteByMemberAccount(member.getMemberAccount());
+
+                    CardApplication cancelRecord = new CardApplication();
+                    cancelRecord.setMemberAccount(member.getMemberAccount());
+                    cancelRecord.setMemberName(member.getMemberName());
+                    cancelRecord.setMemberPhone(member.getMemberPhone() != null ? String.valueOf(member.getMemberPhone()) : "");
+                    cancelRecord.setApplyTime(sdf.format(now) + " " + new java.text.SimpleDateFormat("HH:mm:ss").format(now));
+                    cancelRecord.setStatus("cancelled");
+                    cancelRecord.setRemark("会员卡到期自动取消");
+                    cancelRecord.setType("cancel");
+                    cardApplicationService.insert(cancelRecord);
+
+                    expiredCount++;
+                }
+            } catch (Exception e) {
+                // ignore date parse errors
+            }
+        }
+        return expiredCount;
     }
 }

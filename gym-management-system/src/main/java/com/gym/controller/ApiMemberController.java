@@ -315,6 +315,8 @@ public class ApiMemberController {
             cancelRecord.setRemark(remark != null && !remark.trim().isEmpty() ? remark : "管理员取消会员资格");
             cancelRecord.setType("cancel");
             cardApplicationService.insert(cancelRecord);
+
+            classOrderService.deleteByMemberAccount(memberAccount);
         }
 
         Map<String, Object> resp = new HashMap<>();
