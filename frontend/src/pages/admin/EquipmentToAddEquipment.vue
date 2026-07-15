@@ -14,7 +14,11 @@
           <el-input v-model="form.equipmentLocation" />
         </el-form-item>
         <el-form-item label="器材状态">
-          <el-input v-model="form.equipmentStatus" />
+          <el-select v-model="form.equipmentStatus" placeholder="请选择器材状态" style="width: 100%">
+            <el-option label="正常" value="正常" />
+            <el-option label="损坏" value="损坏" />
+            <el-option label="维修中" value="维修中" />
+          </el-select>
         </el-form-item>
         <el-form-item label="备注信息">
           <el-input v-model="form.equipmentMessage" />
