@@ -2,6 +2,7 @@ package com.gym.mapper;
 
 import com.gym.entity.ClassTable;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -22,5 +23,8 @@ public interface ClassTableMapper {
 
     //根据id删除已预约的课程
     Boolean deleteOrderByClassId(Integer classId);
+
+    @Update("UPDATE class_table SET class_begin = #{classBegin} WHERE class_id = #{classId}")
+    Boolean updateClassBeginByClassId(Integer classId, String classBegin);
 
 }

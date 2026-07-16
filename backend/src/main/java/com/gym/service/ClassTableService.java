@@ -21,4 +21,6 @@ public interface ClassTableService {
     //根据id删除已预约的课程
     Boolean deleteOrderByClassId(Integer classId);
 
+    Boolean updateClassBeginByClassId(Integer classId, String classBegin);
+
 }

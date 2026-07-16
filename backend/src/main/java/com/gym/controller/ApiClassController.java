@@ -88,6 +88,31 @@ public class ApiClassController {
         return ResponseEntity.ok(resp);
     }
 
+    @PostMapping("/updateClass")
+    public ResponseEntity<Map<String, Object>> updateClass(Integer classId, String classBegin) {
+        if (classId == null) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "课程ID不能为空");
+            return ResponseEntity.ok(resp);
+        }
+        if (classBegin == null || classBegin.trim().isEmpty()) {
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("success", false);
+            resp.put("message", "上课时间不能为空");
+            return ResponseEntity.ok(resp);
+        }
+
+        Boolean result = classTableService.updateClassBeginByClassId(classId, classBegin);
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("success", result != null && result);
+        if (!(result != null && result)) {
+            resp.put("message", "更新失败");
+        }
+        return ResponseEntity.ok(resp);
+    }
+
     @PostMapping("/delClass")
     public ResponseEntity<Map<String, Object>> deleteClass(Integer classId) {
         if (classId == null) {

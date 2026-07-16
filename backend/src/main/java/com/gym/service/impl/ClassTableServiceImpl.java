@@ -40,4 +40,9 @@ public class ClassTableServiceImpl implements ClassTableService {
     public Boolean deleteOrderByClassId(Integer classId) {
         return classTableMapper.deleteOrderByClassId(classId);
     }
+
+    @Override
+    public Boolean updateClassBeginByClassId(Integer classId, String classBegin) {
+        return classTableMapper.updateClassBeginByClassId(classId, classBegin);
+    }
 }
