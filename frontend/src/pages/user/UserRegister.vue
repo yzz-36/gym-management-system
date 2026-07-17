@@ -37,6 +37,10 @@
           <label>年龄</label>
           <el-input v-model="form.memberAge" placeholder="请输入年龄" type="number" size="large" />
         </div>
+        <div class="input-group">
+          <label>邮箱</label>
+          <el-input v-model="form.memberEmail" placeholder="请输入邮箱（用于找回密码）" size="large" />
+        </div>
 
         <el-alert v-if="msg" :title="msg" type="error" :closable="false" show-icon style="margin-top: 12px" />
 
@@ -63,7 +67,8 @@ const form = reactive({
   memberPassword: '',
   memberName: '',
   memberGender: '',
-  memberAge: ''
+  memberAge: '',
+  memberEmail: ''
 })
 const msg = ref('')
 
@@ -80,7 +85,8 @@ async function submit() {
       memberPassword: form.memberPassword,
       memberName: form.memberName,
       memberGender: form.memberGender,
-      memberAge: form.memberAge ? Number(form.memberAge) : null
+      memberAge: form.memberAge ? Number(form.memberAge) : null,
+      memberEmail: form.memberEmail || null
     })
     if (resp.data && resp.data.success) {
       alert('注册成功，请登录')

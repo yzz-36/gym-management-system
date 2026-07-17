@@ -63,6 +63,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public Member selectByEmail(String memberEmail) {
+        return memberMapper.selectByEmail(memberEmail);
+    }
+
+    @Override
+    public Boolean updatePasswordByMemberAccount(Member member) {
+        String encodedPassword = passwordEncoder.encode(member.getMemberPassword());
+        member.setMemberPassword(encodedPassword);
+        return memberMapper.updatePasswordByMemberAccount(member);
+    }
+
+    @Override
     public Boolean deductMemberClass(Integer memberAccount) {
         return memberMapper.deductMemberClass(memberAccount);
     }

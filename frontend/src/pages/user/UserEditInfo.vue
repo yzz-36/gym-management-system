@@ -25,6 +25,9 @@
         <el-form-item label="联系方式">
           <el-input v-model="member.memberPhone" />
         </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="member.memberEmail" placeholder="用于找回密码" />
+        </el-form-item>
         <el-form-item label="身高">
           <el-input v-model="member.memberHeight" />
         </el-form-item>

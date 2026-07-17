@@ -28,6 +28,12 @@ public interface MemberService {
     //根据会员账号查询会员
     List<Member> selectByMemberAccount(Integer memberAccount);
 
+    //根据邮箱查询会员
+    Member selectByEmail(String memberEmail);
+
+    //根据会员账号更新密码
+    Boolean updatePasswordByMemberAccount(Member member);
+
     //扣减会员剩余课时
     Boolean deductMemberClass(Integer memberAccount);
 

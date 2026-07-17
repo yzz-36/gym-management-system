@@ -34,7 +34,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/api/adminLogin",
                         "/api/userLogin",
                         "/api/user/register",
-                        "/api/logout"
+                        "/api/logout",
+                        "/api/forgot-password/send-code",
+                        "/api/forgot-password/reset"
                 );
     }
 }

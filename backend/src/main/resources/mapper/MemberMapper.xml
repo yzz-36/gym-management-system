@@ -12,9 +12,9 @@
     <insert id="insertMember" parameterType="member">
         INSERT INTO member (member_account, member_password, member_name, member_gender, member_age, member_height,
                             member_weight, member_phone, card_time, card_expire_time, card_class,
-                            card_next_class, member_type)
+                            card_next_class, member_type, member_email)
         VALUES (#{memberAccount}, #{memberPassword}, #{memberName}, #{memberGender}, #{memberAge}, #{memberHeight},
-                #{memberWeight}, #{memberPhone}, #{cardTime}, #{cardExpireTime}, #{cardClass}, #{cardNextClass}, #{memberType})
+                #{memberWeight}, #{memberPhone}, #{cardTime}, #{cardExpireTime}, #{cardClass}, #{cardNextClass}, #{memberType}, #{memberEmail})
     </insert>
 
     <update id="updateMemberByMemberAccount" parameterType="member">
@@ -31,7 +31,8 @@
             card_expire_time = #{cardExpireTime},
             card_class      = #{cardClass},
             card_next_class = #{cardNextClass},
-            member_type     = #{memberType}
+            member_type     = #{memberType},
+            member_email    = #{memberEmail}
         WHERE member_account = #{memberAccount}
     </update>
 
@@ -64,6 +65,19 @@
         FROM member
         WHERE member_account = #{memberAccount}
     </select>
+
+    <select id="selectByEmail" parameterType="java.lang.String" resultType="member">
+        SELECT *
+        FROM member
+        WHERE member_email = #{memberEmail}
+        LIMIT 1
+    </select>
+
+    <update id="updatePasswordByMemberAccount" parameterType="member">
+        UPDATE member
+        SET member_password = #{memberPassword}
+        WHERE member_account = #{memberAccount}
+    </update>
 
     <update id="deductMemberClass" parameterType="java.lang.Integer">
         UPDATE member

@@ -12,6 +12,7 @@
         <el-descriptions-item label="性别">{{ member.memberGender }}</el-descriptions-item>
         <el-descriptions-item label="年龄">{{ member.memberAge }}</el-descriptions-item>
         <el-descriptions-item label="联系方式">{{ member.memberPhone }}</el-descriptions-item>
+        <el-descriptions-item label="邮箱">{{ member.memberEmail || '未绑定' }}</el-descriptions-item>
         <el-descriptions-item label="身高">{{ member.memberHeight }}</el-descriptions-item>
         <el-descriptions-item label="体重">{{ member.memberWeight }}</el-descriptions-item>
         <el-descriptions-item label="办卡时间">{{ member.cardTime }}</el-descriptions-item>

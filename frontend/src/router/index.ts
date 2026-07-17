@@ -23,6 +23,7 @@ import UserClassList from '../pages/user/UserClassList.vue'
 import UserApplyClass from '../pages/user/UserApplyClass.vue'
 import UserChat from '../pages/user/UserChat.vue'
 import UserRegister from '../pages/user/UserRegister.vue'
+import ForgotPassword from '../pages/user/ForgotPassword.vue'
 import UserApplyCard from '../pages/user/UserApplyCard.vue'
 import CardApplicationList from '../pages/admin/CardApplicationList.vue'
 import api from '../api/client'
@@ -31,6 +32,7 @@ const routes = [
   { path: '/', component: UserLogin },
   { path: '/admin', component: AdminLogin },
   { path: '/register', component: UserRegister },
+  { path: '/forgot-password', component: ForgotPassword },
 
   { path: '/admin/dashboard', component: AdminMain, meta: { requiresAuth: true, role: 'admin' } },
   { path: '/user/home', component: UserMain, meta: { requiresAuth: true, role: 'user' } },

@@ -32,6 +32,7 @@
 
         <div class="login-links">
           <el-link type="primary" @click="router.push('/register')">注册账号</el-link>
+          <el-link type="primary" @click="router.push('/forgot-password')">忘记密码</el-link>
           <el-link type="primary" @click="router.push('/admin')">管理员登录</el-link>
         </div>
       </div>
@@ -123,7 +124,8 @@ async function submit() {
 }
 .login-links {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 16px;
   margin-top: 18px;
 }
 </style>

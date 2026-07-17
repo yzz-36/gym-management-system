@@ -15,6 +15,7 @@ public class Member {
     private Integer cardClass;
     private Integer cardNextClass;
     private String memberType;
+    private String memberEmail;
 
     public Integer getMemberAccount() {
         return memberAccount;
@@ -118,5 +119,13 @@ public class Member {
 
     public void setMemberType(String memberType) {
         this.memberType = memberType;
+    }
+
+    public String getMemberEmail() {
+        return memberEmail;
+    }
+
+    public void setMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;
     }
 }

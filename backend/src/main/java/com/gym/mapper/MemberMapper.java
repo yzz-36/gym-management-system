@@ -31,6 +31,10 @@ public interface MemberMapper {
 
     Member selectByAccount(Integer memberAccount);
 
+    Member selectByEmail(String memberEmail);
+
+    Boolean updatePasswordByMemberAccount(Member member);
+
     Boolean deductMemberClass(Integer memberAccount);
 
     Boolean refundMemberClass(Integer memberAccount);

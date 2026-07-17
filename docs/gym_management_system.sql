@@ -97,6 +97,7 @@ CREATE TABLE `member`  (
   `card_class` int NULL DEFAULT NULL COMMENT '购买课时',
   `card_next_class` int NULL DEFAULT NULL COMMENT '剩余课时',
   `member_type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'member' COMMENT '用户类型：member=会员, visitor=非会员',
+  `member_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
   PRIMARY KEY (`member_account`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
 
@@ -184,5 +185,8 @@ CREATE TABLE `card_application` (
   `type` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT 'apply' COMMENT '类型：apply=办卡申请, cancel=退卡',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Compact;
+
+-- 如果数据库已存在，执行以下语句添加邮箱字段
+-- ALTER TABLE `member` ADD COLUMN `member_email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱' AFTER `member_type`;
 
 SET FOREIGN_KEY_CHECKS = 1;
